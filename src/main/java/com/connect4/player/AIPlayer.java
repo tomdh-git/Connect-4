@@ -1,11 +1,11 @@
-package com.connect4.player;
+package src.main.java.com.connect4.player;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.connect4.view.Cell;
-import com.connect4.settings.DifficultyLevel;
-import com.connect4.view.GameState;
+import src.main.java.com.connect4.view.Cell;
+import src.main.java.com.connect4.settings.DifficultyLevel;
+import src.main.java.com.connect4.view.GameState;
 
 /**
  * AIPlayer.java
@@ -33,23 +33,14 @@ import com.connect4.view.GameState;
  */
 public class AIPlayer {
 
-    // =========================================================================
-    // Constants for evaluation scores
-    // =========================================================================
     private static final int WIN_SCORE = 1000000;
     private static final int LOSE_SCORE = -1000000;
     private static final int DRAW_SCORE = 0;
 
-    // =========================================================================
-    // Instance variables
-    // =========================================================================
     private final DifficultyLevel difficulty;
     private final int playerNumber; // Which player the AI is (1 or 2)
     private final Random random;
 
-    // =========================================================================
-    // Constructor
-    // =========================================================================
     /**
      * Creates an AI player with the specified difficulty.
      * @param difficulty   the difficulty level
@@ -61,9 +52,6 @@ public class AIPlayer {
         this.random = new Random();
     }
 
-    // =========================================================================
-    // Get the best move for the current position
-    // =========================================================================
     /**
      * Calculates and returns the best move for the AI.
      * Uses min/max algorithm with alpha-beta pruning.
@@ -116,9 +104,6 @@ public class AIPlayer {
         return bestMove;
     }
 
-    // =========================================================================
-    // Min/Max algorithm with alpha-beta pruning
-    // =========================================================================
     /**
      * Recursive min/max evaluation with alpha-beta pruning.
      * This is the core of the AI decision making:
@@ -191,9 +176,6 @@ public class AIPlayer {
         }
     }
 
-    // =========================================================================
-    // Position evaluation heuristic
-    // =========================================================================
     /**
      * Evaluates a non-terminal game position.
      * The evaluation considers:
@@ -212,11 +194,6 @@ public class AIPlayer {
         int rows = state.getRows();
         Cell[][] cells = state.getCells();
 
-        // =====================================================================
-        // EVALUATION FACTOR 1: Center column control
-        // Pieces in center columns are more valuable because they participate
-        // in more potential winning combinations
-        // =====================================================================
         int centerCol = cols / 2;
         for (int row = 0; row < rows; row++) {
             Cell cell = cells[centerCol][row];
@@ -230,24 +207,13 @@ public class AIPlayer {
             }
         }
 
-        // =====================================================================
-        // EVALUATION FACTOR 2: Line potential scoring
-        // Score based on sequences of pieces that could become wins
-        // =====================================================================
         score += evaluateLines(state);
 
-        // =====================================================================
-        // EVALUATION FACTOR 3: Threat detection
-        // Heavily weight positions that create or block winning threats
-        // =====================================================================
         score += evaluateThreats(state);
 
         return score;
     }
 
-    // =========================================================================
-    // Evaluate line potentials
-    // =========================================================================
     /**
      * Evaluates potential winning lines.
      * Scoring:
@@ -295,9 +261,6 @@ public class AIPlayer {
         return score;
     }
 
-    // =========================================================================
-    // Evaluate a 4-cell window
-    // =========================================================================
     /**
      * Evaluates a window of 4 cells for scoring potential.
      * 
@@ -350,9 +313,6 @@ public class AIPlayer {
         return 0;
     }
 
-    // =========================================================================
-    // Evaluate immediate threats
-    // =========================================================================
     /**
      * Evaluates immediate win/block threats.
      * 
@@ -382,9 +342,6 @@ public class AIPlayer {
         return score;
     }
 
-    // =========================================================================
-    // Check if piece belongs to AI
-    // =========================================================================
     /**
      * Checks if a cell's piece belongs to the AI player.
      * 
@@ -404,9 +361,6 @@ public class AIPlayer {
         return cell.isLucky();
     }
 
-    // =========================================================================
-    // Get list of valid moves
-    // =========================================================================
     /**
      * Gets a list of valid column numbers for moves.
      * 
@@ -434,9 +388,6 @@ public class AIPlayer {
         return moves;
     }
 
-    // =========================================================================
-    // Clone game state for simulation
-    // =========================================================================
     /**
      * Creates a deep copy of the game state for AI simulation.
      * 
@@ -447,9 +398,6 @@ public class AIPlayer {
         return new GameState(original);
     }
 
-    // =========================================================================
-    // Evaluate whether to accept a lucky coin offer
-    // =========================================================================
     /**
      * Decides whether the AI should accept a lucky coin offer.
      * Uses evaluation to compare accepting vs rejecting:
@@ -503,10 +451,6 @@ public class AIPlayer {
         // Add small bias towards accepting since it's a free piece
         return acceptScore >= rejectScore - 5;
     }
-
-    // =========================================================================
-    // Getters
-    // =========================================================================
 
     public DifficultyLevel getDifficulty() {
         return difficulty;

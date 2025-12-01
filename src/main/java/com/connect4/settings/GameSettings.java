@@ -1,17 +1,15 @@
-package com.connect4.settings;
+package src.main.java.com.connect4.settings;
 
 import java.io.Serializable;
 
-import com.connect4.player.Player;
+import src.main.java.com.connect4.player.Player;
 
 /**
  * GameSettings.java - NEW CLASS
- * 
  * This class encapsulates all game configuration settings including:
  * - Game mode (two-player vs single-player against computer)
  * - Difficulty level (determines board size, lucky coins, AI complexity)
  * - Player configurations
- * 
  * GameSettings is created during the pre-game configuration phase and
  * passed to GameState to initialize the game appropriately.
  * 
@@ -21,9 +19,6 @@ public class GameSettings implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // =========================================================================
-    // NEW: Enum for game modes
-    // =========================================================================
     public enum GameMode {
         TWO_PLAYER("Two Players", "Two human players compete against each other"),
         VS_COMPUTER("Vs Computer", "Single player competes against AI opponent");
@@ -50,9 +45,6 @@ public class GameSettings implements Serializable {
         }
     }
 
-    // =========================================================================
-    // NEW: Instance variables
-    // =========================================================================
     private GameMode gameMode;
     private DifficultyLevel difficultyLevel;
     private Player player1;
@@ -62,9 +54,6 @@ public class GameSettings implements Serializable {
     private int maxLuckyCoins;
     private int currentLuckyCoins;
 
-    // =========================================================================
-    // NEW: Default constructor for two-player mode
-    // =========================================================================
     /**
      * Creates default game settings for two-player mode with standard board.
      */
@@ -76,9 +65,6 @@ public class GameSettings implements Serializable {
         applyDifficultySettings();
     }
 
-    // =========================================================================
-    // NEW: Constructor for vs computer mode
-    // =========================================================================
     /**
      * Creates game settings for playing against computer.
      * 
@@ -90,7 +76,7 @@ public class GameSettings implements Serializable {
         this.gameMode = GameMode.VS_COMPUTER;
         this.difficultyLevel = level;
 
-        // Determine computer's color (opposite of human)
+        // Determine computer's color
         Player.CoinColor computerColor = getOppositeColor(humanPlayer.getCoinColor());
         Player computerPlayer = Player.createComputerPlayer(computerColor);
 
@@ -109,9 +95,6 @@ public class GameSettings implements Serializable {
         applyDifficultySettings();
     }
 
-    // =========================================================================
-    // NEW: Constructor for two-player mode with custom players
-    // =========================================================================
     /**
      * Creates game settings for two-player mode with custom players.
      * 
@@ -128,9 +111,6 @@ public class GameSettings implements Serializable {
         applyDifficultySettings();
     }
 
-    // =========================================================================
-    // NEW: Apply settings from difficulty level
-    // =========================================================================
     /**
      * Applies board size and lucky coin settings from the difficulty level.
      */
@@ -141,9 +121,6 @@ public class GameSettings implements Serializable {
         this.currentLuckyCoins = 0;
     }
 
-    // =========================================================================
-    // NEW: Get opposite color for computer
-    // =========================================================================
     /**
      * Gets a color that's different from the given color.
      * 
@@ -160,9 +137,6 @@ public class GameSettings implements Serializable {
         }
     }
 
-    // =========================================================================
-    // NEW: Check if lucky coins are available
-    // =========================================================================
     /**
      * Checks if more lucky coins can be generated.
      * 
@@ -172,9 +146,6 @@ public class GameSettings implements Serializable {
         return currentLuckyCoins < maxLuckyCoins;
     }
 
-    // =========================================================================
-    // NEW: Increment lucky coin count
-    // =========================================================================
     /**
      * Records that a lucky coin was generated.
      */
@@ -184,9 +155,6 @@ public class GameSettings implements Serializable {
         }
     }
 
-    // =========================================================================
-    // NEW: Decrement lucky coin count (for undo)
-    // =========================================================================
     /**
      * Records that a lucky coin was removed (undo).
      */
@@ -196,9 +164,6 @@ public class GameSettings implements Serializable {
         }
     }
 
-    // =========================================================================
-    // NEW: Reset lucky coin count
-    // =========================================================================
     /**
      * Resets the lucky coin count to zero.
      */
@@ -206,9 +171,6 @@ public class GameSettings implements Serializable {
         currentLuckyCoins = 0;
     }
 
-    // =========================================================================
-    // NEW: Check if playing against computer
-    // =========================================================================
     /**
      * Checks if this is a game against the computer.
      * 
@@ -218,9 +180,6 @@ public class GameSettings implements Serializable {
         return gameMode == GameMode.VS_COMPUTER;
     }
 
-    // =========================================================================
-    // NEW: Check if two-player mode
-    // =========================================================================
     /**
      * Checks if this is a two-player game.
      * 
@@ -230,9 +189,6 @@ public class GameSettings implements Serializable {
         return gameMode == GameMode.TWO_PLAYER;
     }
 
-    // =========================================================================
-    // NEW: Get the computer player (if any)
-    // =========================================================================
     /**
      * Gets the computer player if in vs computer mode.
      * 
@@ -246,9 +202,6 @@ public class GameSettings implements Serializable {
         return null;
     }
 
-    // =========================================================================
-    // NEW: Get the human player in vs computer mode
-    // =========================================================================
     /**
      * Gets the human player in vs computer mode.
      * In two-player mode, returns player1.
@@ -263,9 +216,6 @@ public class GameSettings implements Serializable {
         return player1;
     }
 
-    // =========================================================================
-    // NEW: Get settings summary
-    // =========================================================================
     /**
      * Gets a summary string of the current settings.
      * 
@@ -285,10 +235,6 @@ public class GameSettings implements Serializable {
         }
         return sb.toString();
     }
-
-    // =========================================================================
-    // NEW: Getters and Setters
-    // =========================================================================
 
     public GameMode getGameMode() {
         return gameMode;

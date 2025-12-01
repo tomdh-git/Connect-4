@@ -1,18 +1,18 @@
-package com.connect4.view;
+package src.main.java.com.connect4.view;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import com.connect4.player.Player;
-import com.connect4.settings.DifficultyLevel;
-import com.connect4.settings.GameSettings;
-import com.connect4.settings.SaveLoadManager;
+import src.main.java.com.connect4.player.Player;
+import src.main.java.com.connect4.settings.DifficultyLevel;
+import src.main.java.com.connect4.settings.GameSettings;
+import src.main.java.com.connect4.settings.SaveLoadManager;
 
 public class MainMenu extends JFrame {
 
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
+    private final JPanel mainPanel;
+    private final CardLayout cardLayout;
 
     private GameSettings currentSettings;
 
@@ -43,18 +43,7 @@ public class MainMenu extends JFrame {
         panel.setBackground(new Color(0, 51, 102));
         panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
-        JLabel titleLabel = new JLabel("CONNECT FOUR", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 42));
-        titleLabel.setForeground(Color.WHITE);
-
-        JLabel subtitleLabel = new JLabel("Extended Edition", SwingConstants.CENTER);
-        subtitleLabel.setFont(new Font("Arial", Font.ITALIC, 18));
-        subtitleLabel.setForeground(new Color(255, 215, 0));
-
-        JPanel titlePanel = new JPanel(new GridLayout(2, 1, 0, 5));
-        titlePanel.setOpaque(false);
-        titlePanel.add(titleLabel);
-        titlePanel.add(subtitleLabel);
+        JPanel titlePanel = getJPanel();
 
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 15));
         buttonPanel.setOpaque(false);
@@ -87,6 +76,22 @@ public class MainMenu extends JFrame {
         panel.add(footer, BorderLayout.SOUTH);
 
         return panel;
+    }
+
+    private static JPanel getJPanel() {
+        JLabel titleLabel = new JLabel("CONNECT FOUR", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 42));
+        titleLabel.setForeground(Color.WHITE);
+
+        JLabel subtitleLabel = new JLabel("Extended Edition", SwingConstants.CENTER);
+        subtitleLabel.setFont(new Font("Arial", Font.ITALIC, 18));
+        subtitleLabel.setForeground(new Color(255, 215, 0));
+
+        JPanel titlePanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        titlePanel.setOpaque(false);
+        titlePanel.add(titleLabel);
+        titlePanel.add(subtitleLabel);
+        return titlePanel;
     }
 
     private JPanel createModeScreen() {
@@ -172,6 +177,10 @@ public class MainMenu extends JFrame {
         JLabel info = new JLabel(
                 "<html><center>GUI: Click buttons to play<br>Text: Type commands in console</center></html>",
                 SwingConstants.CENTER);
+        return getjPanel(panel, label, centerPanel, info);
+    }
+
+    private JPanel getjPanel(JPanel panel, JLabel label, JPanel centerPanel, JLabel info) {
         info.setForeground(new Color(200, 200, 200));
         info.setFont(new Font("Arial", Font.PLAIN, 12));
 
@@ -221,14 +230,7 @@ public class MainMenu extends JFrame {
         JLabel info = new JLabel(
                 "<html><center>Square boards enable Four Corners win mode:<br>Capture all 4 corners to win!</center></html>",
                 SwingConstants.CENTER);
-        info.setForeground(new Color(200, 200, 200));
-        info.setFont(new Font("Arial", Font.PLAIN, 12));
-
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(centerPanel, BorderLayout.CENTER);
-        panel.add(info, BorderLayout.SOUTH);
-
-        return panel;
+        return getjPanel(panel, label, centerPanel, info);
     }
 
     private JPanel createDifficultyScreen() {
@@ -382,6 +384,10 @@ public class MainMenu extends JFrame {
             startGame(settings);
         });
 
+        return getjPanel(panel, label, formPanel, buttonPanel, startBtn, backBtn);
+    }
+
+    private JPanel getjPanel(JPanel panel, JLabel label, JPanel formPanel, JPanel buttonPanel, JButton startBtn, JButton backBtn) {
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "difficulty"));
 
         buttonPanel.add(startBtn);
@@ -461,16 +467,7 @@ public class MainMenu extends JFrame {
             startGame(settings);
         });
 
-        backBtn.addActionListener(e -> cardLayout.show(mainPanel, "difficulty"));
-
-        buttonPanel.add(startBtn);
-        buttonPanel.add(backBtn);
-
-        panel.add(label, BorderLayout.NORTH);
-        panel.add(formPanel, BorderLayout.CENTER);
-        panel.add(buttonPanel, BorderLayout.SOUTH);
-
-        return panel;
+        return getjPanel(panel, label, formPanel, buttonPanel, startBtn, backBtn);
     }
 
     private JButton createMenuButton(String text) {

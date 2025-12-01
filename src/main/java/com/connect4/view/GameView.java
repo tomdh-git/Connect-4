@@ -1,4 +1,4 @@
-package com.connect4.view;
+package src.main.java.com.connect4.view;
 
 /**
  * GameView.java - NEW INTERFACE
@@ -14,10 +14,6 @@ package com.connect4.view;
  * @author Refactored for multi-view support
  */
 public interface GameView {
-
-    // =========================================================================
-    // NEW: Initialize and display the view
-    // =========================================================================
     /**
      * Initializes and displays the game view.
      * For GUI, this creates and shows the window.
@@ -25,26 +21,17 @@ public interface GameView {
      */
     void initialize();
 
-    // =========================================================================
-    // NEW: Update the display to reflect current game state
-    // =========================================================================
     /**
      * Updates the view to reflect the current state of the game.
      * This should be called after every move or game action.
      */
     void update();
 
-    // =========================================================================
-    // NEW: Display the game board
-    // =========================================================================
     /**
      * Displays the current state of the game board.
      */
     void displayBoard();
 
-    // =========================================================================
-    // NEW: Display game status message
-    // =========================================================================
     /**
      * Displays a message about the current game status.
      * 
@@ -52,9 +39,6 @@ public interface GameView {
      */
     void displayMessage(String message);
 
-    // =========================================================================
-    // NEW: Display error message
-    // =========================================================================
     /**
      * Displays an error message to the user.
      * 
@@ -62,9 +46,6 @@ public interface GameView {
      */
     void displayError(String error);
 
-    // =========================================================================
-    // NEW: Get player input for column selection
-    // =========================================================================
     /**
      * Gets the player's input for column selection.
      * For GUI, this might wait for a click event.
@@ -75,18 +56,12 @@ public interface GameView {
      */
     int getPlayerInput();
 
-    // =========================================================================
-    // NEW: Start the game loop
-    // =========================================================================
     /**
      * Starts the main game loop.
      * Handles the flow of getting input, making moves, and updating display.
      */
     void startGameLoop();
 
-    // =========================================================================
-    // NEW: Clean up resources when game ends
-    // =========================================================================
     /**
      * Cleans up any resources used by the view.
      * For GUI, this might close windows.

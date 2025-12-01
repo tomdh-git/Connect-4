@@ -1,17 +1,17 @@
-package com.connect4;
+package src.main.java.com.connect4;
 
 import java.util.Scanner;
 
-import com.connect4.settings.DifficultyLevel;
-import com.connect4.settings.GameSettings;
-import com.connect4.view.GUIView;
-import com.connect4.view.GameState;
-import com.connect4.view.GameView;
-import com.connect4.view.TextView;
-import com.connect4.player.Player;
+import src.main.java.com.connect4.view.GUIView;
+import src.main.java.com.connect4.settings.DifficultyLevel;
+import src.main.java.com.connect4.settings.GameSettings;
+import src.main.java.com.connect4.view.GameState;
+import src.main.java.com.connect4.view.GameView;
+import src.main.java.com.connect4.view.TextView;
+import src.main.java.com.connect4.player.Player;
 
 /**
- * Connect4Game.java - MODIFIED CLASS (Extended Features)
+ * Connect4Game.java - MODIFIED CLASS
  * Main launcher with game configuration options:
  * - Two-player mode with color selection
  * - Single-player vs computer with difficulty levels
@@ -304,6 +304,7 @@ public class Connect4Game {
             System.out.println("Enter a valid number.");
         }
     }
+
 
     private static GameView createView(String viewChoice, GameState gameState) {
         return switch (viewChoice.toLowerCase()) {

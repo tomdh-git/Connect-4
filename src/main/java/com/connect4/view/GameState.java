@@ -1,19 +1,17 @@
-package com.connect4.view;
+package src.main.java.com.connect4.view;
 
 import java.awt.Point;
 import java.util.Stack;
 
-import com.connect4.settings.GameSettings;
-import com.connect4.player.Player;
+import src.main.java.com.connect4.settings.GameSettings;
+import src.main.java.com.connect4.player.Player;
 
 import java.util.Random;
 import java.util.ArrayList;
 
 /**
  * GameState.java - MODIFIED CLASS (Extended Features)
- * 
  * This class manages the game state for Connect Four.
- * 
  * EXTENDED MODIFICATIONS:
  * - Support for variable board sizes (based on difficulty level)
  * - Player management (two humans or human vs computer)
@@ -27,8 +25,8 @@ import java.util.ArrayList;
  */
 public class GameState {
 
-    private int columns;
-    private int rows;
+    private final int columns;
+    private final int rows;
 
     private Cell[][] cells;
     private Stack<Point> moves;
@@ -38,8 +36,8 @@ public class GameState {
     private boolean player2Wins;
     private boolean player1Turn;
 
-    private GameSettings settings;
-    private Random random;
+    private final GameSettings settings;
+    private final Random random;
     private static final double LUCKY_COIN_OFFER_CHANCE = 0.15;
 
     private Stack<Boolean> wasLuckyCoin;
@@ -154,6 +152,21 @@ public class GameState {
         }
 
         Player currentPlayer = getCurrentPlayer();
+        setColor(col, row, currentPlayer);
+        wasLuckyCoin.push(false);
+
+        moves.push(new Point(col, row));
+        player1Turn = !player1Turn;
+        checkForWin();
+
+        if (!gameOver) {
+            tryGenerateLuckyOffer();
+        }
+
+        return true;
+    }
+
+    private void setColor(int col, int row, Player currentPlayer) {
         switch (currentPlayer.getCoinColor()) {
             case RED:
                 cells[col][row].setRed();
@@ -174,17 +187,6 @@ public class GameState {
                 cells[col][row].setOrange();
                 break;
         }
-        wasLuckyCoin.push(false);
-
-        moves.push(new Point(col, row));
-        player1Turn = !player1Turn;
-        checkForWin();
-
-        if (!gameOver) {
-            tryGenerateLuckyOffer();
-        }
-
-        return true;
     }
 
     private void tryGenerateLuckyOffer() {
@@ -219,35 +221,16 @@ public class GameState {
         cells[luckyOfferColumn][luckyOfferRow].setLucky();
     }
 
-    public boolean acceptLuckyOffer() {
+    public void acceptLuckyOffer() {
         error = null;
 
         if (!luckyOfferPending) {
             error = "No lucky coin offer pending.";
-            return false;
+            return;
         }
 
         Player currentPlayer = getCurrentPlayer();
-        switch (currentPlayer.getCoinColor()) {
-            case RED:
-                cells[luckyOfferColumn][luckyOfferRow].setRed();
-                break;
-            case YELLOW:
-                cells[luckyOfferColumn][luckyOfferRow].setYellow();
-                break;
-            case BLUE:
-                cells[luckyOfferColumn][luckyOfferRow].setBlue();
-                break;
-            case GREEN:
-                cells[luckyOfferColumn][luckyOfferRow].setGreen();
-                break;
-            case PURPLE:
-                cells[luckyOfferColumn][luckyOfferRow].setPurple();
-                break;
-            case ORANGE:
-                cells[luckyOfferColumn][luckyOfferRow].setOrange();
-                break;
-        }
+        setColor(luckyOfferColumn, luckyOfferRow, currentPlayer);
 
         settings.incrementLuckyCoins();
         wasLuckyCoin.push(true);
@@ -260,15 +243,14 @@ public class GameState {
         player1Turn = !player1Turn;
         checkForWin();
 
-        return true;
     }
 
-    public boolean rejectLuckyOffer() {
+    public void rejectLuckyOffer() {
         error = null;
 
         if (!luckyOfferPending) {
             error = "No lucky coin offer pending.";
-            return false;
+            return;
         }
 
         cells[luckyOfferColumn][luckyOfferRow].clear();
@@ -277,7 +259,6 @@ public class GameState {
         luckyOfferColumn = -1;
         luckyOfferRow = -1;
 
-        return true;
     }
 
     public boolean isLuckyOfferPending() {
@@ -299,16 +280,16 @@ public class GameState {
                 luckyOfferColumn + 1, luckyOfferRow + 1);
     }
 
-    public boolean moveInternal(int column) {
+    public void moveInternal(int column) {
         error = null;
 
         if (gameOver || column < 1 || column > columns) {
-            return false;
+            return;
         }
 
         int col = column - 1;
         if (!cells[col][rows - 1].isAvailable()) {
-            return false;
+            return;
         }
 
         int row = 0;
@@ -328,7 +309,6 @@ public class GameState {
         player1Turn = !player1Turn;
         checkForWin();
 
-        return true;
     }
 
     public boolean undo() {
@@ -499,22 +479,15 @@ public class GameState {
             return true;
         }
 
-        switch (color) {
-            case RED:
-                return cell.isRed();
-            case YELLOW:
-                return cell.isYellow();
-            case BLUE:
-                return cell.isBlue();
-            case GREEN:
-                return cell.isGreen();
-            case PURPLE:
-                return cell.isPurple();
-            case ORANGE:
-                return cell.isOrange();
-            default:
-                return false;
-        }
+        return switch (color) {
+            case RED -> cell.isRed();
+            case YELLOW -> cell.isYellow();
+            case BLUE -> cell.isBlue();
+            case GREEN -> cell.isGreen();
+            case PURPLE -> cell.isPurple();
+            case ORANGE -> cell.isOrange();
+            default -> false;
+        };
     }
 
     public boolean isValidMove(int column) {

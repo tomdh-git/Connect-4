@@ -1,19 +1,18 @@
-package com.connect4.view;
+package src.main.java.com.connect4.view;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.*;
 
-import com.connect4.player.AIPlayer;
-import com.connect4.player.Player;
-import com.connect4.settings.DifficultyLevel;
-import com.connect4.settings.GameSettings;
-import com.connect4.settings.SaveLoadManager;
+import src.main.java.com.connect4.player.AIPlayer;
+import src.main.java.com.connect4.player.Player;
+import src.main.java.com.connect4.settings.DifficultyLevel;
+import src.main.java.com.connect4.settings.GameSettings;
+import src.main.java.com.connect4.settings.SaveLoadManager;
 
 /**
- * GUIView.java - MODIFIED CLASS (Extended Features)
- * 
+ * GUIView.java - MODIFIED CLASS
  * EXTENDED FEATURES:
  * - Configuration dialog for game mode and difficulty
  * - Save/Load menu options
@@ -30,7 +29,6 @@ public class GUIView implements GameView {
     private GameState state;
     private JFrame frame;
     private BoardDrawing board;
-    private JPanel buttonPanel;
     private AIPlayer aiPlayer;
 
     private volatile boolean windowClosed = false;
@@ -61,7 +59,7 @@ public class GUIView implements GameView {
             createAndShowGUI();
         } else {
             try {
-                SwingUtilities.invokeAndWait(() -> createAndShowGUI());
+                SwingUtilities.invokeAndWait(this::createAndShowGUI);
             } catch (InterruptedException | InvocationTargetException e) {
                 e.printStackTrace();
             }
@@ -94,7 +92,7 @@ public class GUIView implements GameView {
         JButton btnNewGame = new JButton("New Game");
         btnNewGame.addActionListener(e -> showConfigDialog());
 
-        buttonPanel = new JPanel(new FlowLayout());
+        JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(btnUndo);
         buttonPanel.add(btnRestart);
         buttonPanel.add(btnNewGame);
@@ -115,26 +113,7 @@ public class GUIView implements GameView {
     private JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu gameMenu = new JMenu("Game");
-
-        JMenuItem newGameItem = new JMenuItem("New Game...");
-        newGameItem.addActionListener(e -> showConfigDialog());
-
-        JMenuItem saveItem = new JMenuItem("Save Game...");
-        saveItem.addActionListener(e -> handleSave());
-
-        JMenuItem loadItem = new JMenuItem("Load Game...");
-        loadItem.addActionListener(e -> handleLoad());
-
-        JMenuItem exitItem = new JMenuItem("Exit");
-        exitItem.addActionListener(e -> handleWindowClose());
-
-        gameMenu.add(newGameItem);
-        gameMenu.addSeparator();
-        gameMenu.add(saveItem);
-        gameMenu.add(loadItem);
-        gameMenu.addSeparator();
-        gameMenu.add(exitItem);
+        JMenu gameMenu = getJMenu();
 
         JMenu statsMenu = new JMenu("Stats");
 
@@ -164,6 +143,30 @@ public class GUIView implements GameView {
         menuBar.add(statsMenu);
 
         return menuBar;
+    }
+
+    private JMenu getJMenu() {
+        JMenu gameMenu = new JMenu("Game");
+
+        JMenuItem newGameItem = new JMenuItem("New Game...");
+        newGameItem.addActionListener(e -> showConfigDialog());
+
+        JMenuItem saveItem = new JMenuItem("Save Game...");
+        saveItem.addActionListener(e -> handleSave());
+
+        JMenuItem loadItem = new JMenuItem("Load Game...");
+        loadItem.addActionListener(e -> handleLoad());
+
+        JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.addActionListener(e -> handleWindowClose());
+
+        gameMenu.add(newGameItem);
+        gameMenu.addSeparator();
+        gameMenu.add(saveItem);
+        gameMenu.add(loadItem);
+        gameMenu.addSeparator();
+        gameMenu.add(exitItem);
+        return gameMenu;
     }
 
     private void switchToTextView() {
@@ -510,8 +513,10 @@ public class GUIView implements GameView {
 
     private void showLuckyOfferDialog() {
         String message = String.format(
-                "A Lucky Coin appeared at column %d, row %d!\n\n" +
-                        "Do you want to claim it?",
+                """
+                        A Lucky Coin appeared at column %d, row %d!
+                        
+                        Do you want to claim it?""",
                 state.getLuckyOfferColumn() + 1,
                 state.getLuckyOfferRow() + 1);
 

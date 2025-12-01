@@ -1,4 +1,4 @@
-package com.connect4.player;
+package src.main.java.com.connect4.player;
 
 import java.io.Serializable;
 
@@ -15,17 +15,11 @@ public class Player implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // =========================================================================
-    // NEW: Enum for player types
-    // =========================================================================
     public enum PlayerType {
         HUMAN, // Human player controlled by user input
         COMPUTER // AI player controlled by computer algorithm
     }
 
-    // =========================================================================
-    // Enum for coin colors
-    // =========================================================================
     public enum CoinColor {
         RED("Red", "\u001B[31m"),
         YELLOW("Yellow", "\u001B[33m"),
@@ -56,9 +50,6 @@ public class Player implements Serializable {
         }
     }
 
-    // =========================================================================
-    // Instance variables
-    // =========================================================================
     private int id; // Unique player identifier (1 or 2)
     private String name; // Player's display name
     private PlayerType type; // Human or Computer
@@ -66,9 +57,6 @@ public class Player implements Serializable {
     private int gamesWon; // Total games won
     private int gamesPlayed; // Total games played
 
-    // =========================================================================
-    // Constructor with full parameters
-    // =========================================================================
     /**
      * Creates a new player with specified attributes.
      * 
@@ -86,9 +74,6 @@ public class Player implements Serializable {
         this.gamesPlayed = 0;
     }
 
-    // =========================================================================
-    // Convenience constructor for human player
-    // =========================================================================
     /**
      * Creates a human player with default settings.
      * 
@@ -100,9 +85,6 @@ public class Player implements Serializable {
         this(id, name, PlayerType.HUMAN, coinColor);
     }
 
-    // =========================================================================
-    // Create default Player 1 (Red)
-    // =========================================================================
     /**
      * Creates a default Player 1 with red coins.
      * 
@@ -112,9 +94,6 @@ public class Player implements Serializable {
         return new Player(1, "Player 1", PlayerType.HUMAN, CoinColor.RED);
     }
 
-    // =========================================================================
-    // Create default Player 2 (Yellow)
-    // =========================================================================
     /**
      * Creates a default Player 2 with yellow coins.
      * 
@@ -124,9 +103,6 @@ public class Player implements Serializable {
         return new Player(2, "Player 2", PlayerType.HUMAN, CoinColor.YELLOW);
     }
 
-    // =========================================================================
-    // Create computer player
-    // =========================================================================
     /**
      * Creates a computer player with specified color.
      * 
@@ -137,9 +113,6 @@ public class Player implements Serializable {
         return new Player(2, "Computer", PlayerType.COMPUTER, coinColor);
     }
 
-    // =========================================================================
-    // Record a win
-    // =========================================================================
     /**
      * Records a game win for this player.
      */
@@ -148,9 +121,6 @@ public class Player implements Serializable {
         gamesPlayed++;
     }
 
-    // =========================================================================
-    // Record a loss
-    // =========================================================================
     /**
      * Records a game loss for this player.
      */
@@ -158,9 +128,6 @@ public class Player implements Serializable {
         gamesPlayed++;
     }
 
-    // =========================================================================
-    // Record a tie
-    // =========================================================================
     /**
      * Records a tied game for this player.
      */
@@ -168,9 +135,6 @@ public class Player implements Serializable {
         gamesPlayed++;
     }
 
-    // =========================================================================
-    // Reset statistics
-    // =========================================================================
     /**
      * Resets all game statistics to zero.
      */
@@ -179,9 +143,6 @@ public class Player implements Serializable {
         gamesPlayed = 0;
     }
 
-    // =========================================================================
-    // Check if player is human
-    // =========================================================================
     /**
      * Checks if this player is human-controlled.
      * 
@@ -191,9 +152,6 @@ public class Player implements Serializable {
         return type == PlayerType.HUMAN;
     }
 
-    // =========================================================================
-    // Check if player is computer
-    // =========================================================================
     /**
      * Checks if this player is computer-controlled.
      * 
@@ -203,9 +161,6 @@ public class Player implements Serializable {
         return type == PlayerType.COMPUTER;
     }
 
-    // =========================================================================
-    // Get win percentage
-    // =========================================================================
     /**
      * Calculates the win percentage.
      * 
@@ -217,9 +172,6 @@ public class Player implements Serializable {
         return (double) gamesWon / gamesPlayed * 100.0;
     }
 
-    // =========================================================================
-    // Get statistics string
-    // =========================================================================
     /**
      * Gets a formatted string of player statistics.
      * 
@@ -229,10 +181,6 @@ public class Player implements Serializable {
         return String.format("%s: %d wins / %d games (%.1f%%)",
                 name, gamesWon, gamesPlayed, getWinPercentage());
     }
-
-    // =========================================================================
-    // Getters and Setters
-    // =========================================================================
 
     public int getId() {
         return id;
@@ -282,9 +230,6 @@ public class Player implements Serializable {
         this.gamesPlayed = gamesPlayed;
     }
 
-    // =========================================================================
-    // NEW: String representation
-    // =========================================================================
     @Override
     public String toString() {
         return String.format("Player[id=%d, name=%s, type=%s, color=%s]",

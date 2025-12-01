@@ -1,40 +1,32 @@
-package com.connect4.settings;
+package src.main.java.com.connect4.settings;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Stack;
 
-import com.connect4.player.Player;
-import com.connect4.view.Cell;
-import com.connect4.view.GameState;
+import src.main.java.com.connect4.player.Player;
+import src.main.java.com.connect4.view.Cell;
+import src.main.java.com.connect4.view.GameState;
 
 import java.awt.Point;
 
 /**
  * SaveLoadManager.java - NEW CLASS
- * 
  * This class handles saving and loading game state to/from files.
  * It provides functionality to:
  * - Save current game state to a file
  * - Load a previously saved game
  * - List available saved games
- * 
  * Save format uses Java serialization for simplicity and reliability.
  * 
  * @author Extended feature implementation
  */
 public class SaveLoadManager {
 
-    // =========================================================================
-    // NEW: Default save directory and file extension
-    // =========================================================================
     private static final String SAVE_DIRECTORY = "saves";
     private static final String FILE_EXTENSION = ".c4save";
 
-    // =========================================================================
-    // NEW: GameSnapshot inner class for serialization
-    // =========================================================================
     /**
      * GameSnapshot captures the complete state of a game for save/load.
      */
@@ -134,12 +126,9 @@ public class SaveLoadManager {
         }
     }
 
-    // =========================================================================
-    // NEW: Ensure save directory exists
-    // =========================================================================
     /**
      * Ensures the save directory exists, creating it if necessary.
-     * 
+     *
      * @return true if directory exists or was created
      */
     public static boolean ensureSaveDirectory() {
@@ -150,9 +139,6 @@ public class SaveLoadManager {
         return dir.isDirectory();
     }
 
-    // =========================================================================
-    // NEW: Generate default save filename
-    // =========================================================================
     /**
      * Generates a default filename based on current timestamp.
      * 
@@ -163,9 +149,6 @@ public class SaveLoadManager {
         return "game_" + sdf.format(new Date()) + FILE_EXTENSION;
     }
 
-    // =========================================================================
-    // NEW: Save game to file
-    // =========================================================================
     /**
      * Saves the current game state to a file.
      * 
@@ -201,9 +184,6 @@ public class SaveLoadManager {
         }
     }
 
-    // =========================================================================
-    // NEW: Save with auto-generated filename
-    // =========================================================================
     /**
      * Saves the game with an auto-generated filename.
      * 
@@ -219,9 +199,6 @@ public class SaveLoadManager {
         return null;
     }
 
-    // =========================================================================
-    // NEW: Load game from file
-    // =========================================================================
     /**
      * Loads a game state from a file.
      * 
@@ -250,9 +227,6 @@ public class SaveLoadManager {
         }
     }
 
-    // =========================================================================
-    // NEW: Apply snapshot to game state
-    // =========================================================================
     /**
      * Applies a loaded snapshot to a new GameState.
      * 
@@ -287,9 +261,6 @@ public class SaveLoadManager {
         return gameState;
     }
 
-    // =========================================================================
-    // NEW: List available saves
-    // =========================================================================
     /**
      * Lists all available save files.
      * 
@@ -319,9 +290,6 @@ public class SaveLoadManager {
         return filenames;
     }
 
-    // =========================================================================
-    // NEW: Get save summaries
-    // =========================================================================
     /**
      * Gets summaries of all available saves.
      * 
@@ -343,9 +311,6 @@ public class SaveLoadManager {
         return summaries;
     }
 
-    // =========================================================================
-    // NEW: Delete a save file
-    // =========================================================================
     /**
      * Deletes a save file.
      * 

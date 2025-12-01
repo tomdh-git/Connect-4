@@ -1,21 +1,18 @@
-package com.connect4.settings;
+package src.main.java.com.connect4.settings;
 
 import java.io.Serializable;
 
 /**
- * DifficultyLevel.java - MODIFIED CLASS (Extended Features)
- * 
+ * DifficultyLevel.java - MODIFIED CLASS
  * This enum defines the difficulty levels for playing against the computer.
  * Each level specifies:
  * - Board dimensions (columns x rows)
  * - Maximum number of lucky coins allowed
  * - AI search depth for min/max algorithm
- * 
  * DIFFICULTY LEVELS (Rectangular - Standard):
  * - BEGINNER: 7x6 board, max 3 lucky coins, shallow AI (depth 2)
  * - INTERMEDIATE: 14x12 board, max 7 lucky coins, moderate AI (depth 4)
  * - EXPERT: 21x18 board, max 11 lucky coins, deep AI (depth 6)
- * 
  * DIFFICULTY LEVELS (Square - Four Corners mode enabled):
  * - BEGINNER_SQUARE: 7x7 board, max 3 lucky coins, shallow AI (depth 2)
  * - INTERMEDIATE_SQUARE: 12x12 board, max 7 lucky coins, moderate AI (depth 4)
@@ -153,22 +150,15 @@ public enum DifficultyLevel implements Serializable {
     }
 
     public static DifficultyLevel fromLevel(int level) {
-        switch (level) {
-            case 1:
-                return BEGINNER;
-            case 2:
-                return INTERMEDIATE;
-            case 3:
-                return EXPERT;
-            case 4:
-                return BEGINNER_SQUARE;
-            case 5:
-                return INTERMEDIATE_SQUARE;
-            case 6:
-                return EXPERT_SQUARE;
-            default:
-                return BEGINNER;
-        }
+        return switch (level) {
+            case 1 -> BEGINNER;
+            case 2 -> INTERMEDIATE;
+            case 3 -> EXPERT;
+            case 4 -> BEGINNER_SQUARE;
+            case 5 -> INTERMEDIATE_SQUARE;
+            case 6 -> EXPERT_SQUARE;
+            default -> BEGINNER;
+        };
     }
 
     public static String[] getAllDescriptions() {
@@ -197,15 +187,10 @@ public enum DifficultyLevel implements Serializable {
     }
 
     public static DifficultyLevel fromSquareLevel(int level) {
-        switch (level) {
-            case 1:
-                return BEGINNER_SQUARE;
-            case 2:
-                return INTERMEDIATE_SQUARE;
-            case 3:
-                return EXPERT_SQUARE;
-            default:
-                return BEGINNER_SQUARE;
-        }
+        return switch (level) {
+            case 2 -> INTERMEDIATE_SQUARE;
+            case 3 -> EXPERT_SQUARE;
+            default -> BEGINNER_SQUARE;
+        };
     }
 }

@@ -1,17 +1,15 @@
-package com.connect4.view;
+package src.main.java.com.connect4.view;
 
 import java.util.Scanner;
 
-import com.connect4.player.AIPlayer;
-import com.connect4.player.Player;
-import com.connect4.settings.GameSettings;
-import com.connect4.settings.SaveLoadManager;
+import src.main.java.com.connect4.player.AIPlayer;
+import src.main.java.com.connect4.player.Player;
+import src.main.java.com.connect4.settings.GameSettings;
+import src.main.java.com.connect4.settings.SaveLoadManager;
 
 /**
- * TextView.java - MODIFIED CLASS (Extended Features)
- * 
+ * TextView.java - MODIFIED CLASS
  * This class implements the GameView interface for text-based console gameplay.
- * 
  * EXTENDED FEATURES:
  * - Game configuration menu (mode, difficulty, players)
  * - Save/Load game functionality
@@ -26,7 +24,7 @@ import com.connect4.settings.SaveLoadManager;
 public class TextView implements GameView {
 
     private GameState state;
-    private Scanner scanner;
+    private final Scanner scanner;
     private boolean running;
     private AIPlayer aiPlayer;
 
@@ -106,20 +104,14 @@ public class TextView implements GameView {
     }
 
     private String getColorCode(Player.CoinColor coinColor) {
-        switch (coinColor) {
-            case RED:
-                return RED;
-            case YELLOW:
-                return YELLOW;
-            case BLUE:
-                return BLUE;
-            case GREEN:
-                return GREEN;
-            case PURPLE:
-                return PURPLE;
-            default:
-                return RESET;
-        }
+        return switch (coinColor) {
+            case RED -> RED;
+            case YELLOW -> YELLOW;
+            case BLUE -> BLUE;
+            case GREEN -> GREEN;
+            case PURPLE -> PURPLE;
+            default -> RESET;
+        };
     }
 
     private void clearScreen() {
@@ -257,26 +249,38 @@ public class TextView implements GameView {
             }
             String input = scanner.nextLine().trim().toUpperCase();
 
-            if (input.equals("Q") || input.equals("QUIT"))
-                return -2;
-            if (input.equals("R") || input.equals("RESTART"))
-                return -1;
-            if (input.equals("U") || input.equals("UNDO"))
-                return 0;
-            if (input.equals("S") || input.equals("SAVE"))
-                return -3;
-            if (input.equals("L") || input.equals("LOAD"))
-                return -4;
-            if (input.equals("T") || input.equals("STATS"))
-                return -5;
-            if (input.equals("A") || input.equals("ACCEPT"))
-                return -6;
-            if (input.equals("X") || input.equals("REJECT"))
-                return -7;
-            if (input.equals("G") || input.equals("GUI"))
-                return -8;
-            if (input.equals("M") || input.equals("MENU"))
-                return -9;
+            switch (input) {
+                case "Q", "QUIT" -> {
+                    return -2;
+                }
+                case "R", "RESTART" -> {
+                    return -1;
+                }
+                case "U", "UNDO" -> {
+                    return 0;
+                }
+                case "S", "SAVE" -> {
+                    return -3;
+                }
+                case "L", "LOAD" -> {
+                    return -4;
+                }
+                case "T", "STATS" -> {
+                    return -5;
+                }
+                case "A", "ACCEPT" -> {
+                    return -6;
+                }
+                case "X", "REJECT" -> {
+                    return -7;
+                }
+                case "G", "GUI" -> {
+                    return -8;
+                }
+                case "M", "MENU" -> {
+                    return -9;
+                }
+            }
 
             if (state.isLuckyOfferPending()) {
                 displayError("Enter A to accept or X to reject the lucky coin.");
@@ -586,8 +590,7 @@ public class TextView implements GameView {
 
     @Override
     public void cleanup() {
-        if (scanner != null)
-            scanner.close();
+        scanner.close();
         running = false;
     }
 

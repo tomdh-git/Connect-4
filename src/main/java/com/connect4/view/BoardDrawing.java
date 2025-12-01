@@ -1,17 +1,15 @@
-package com.connect4.view;
+package src.main.java.com.connect4.view;
 
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import com.connect4.player.Player;
+import src.main.java.com.connect4.player.Player;
 
 /**
- * BoardDrawing.java - MODIFIED CLASS (Extended Features)
- * 
+ * BoardDrawing.java - MODIFIED CLASS
  * This class handles the graphical rendering of the Connect Four game board.
- * 
  * EXTENDED MODIFICATIONS:
  * - Support for variable board sizes
  * - Dynamic cell sizing based on board dimensions
@@ -36,7 +34,7 @@ public class BoardDrawing extends JComponent implements MouseListener {
     private int boardWidth;
     private int boardHeight;
     private int holeSize;
-    private int headerHeight = 40;
+    private final int headerHeight = 40;
 
     private Rectangle[] columnZones;
 
@@ -199,22 +197,14 @@ public class BoardDrawing extends JComponent implements MouseListener {
     }
 
     private Color getPlayerColor(Player.CoinColor coinColor) {
-        switch (coinColor) {
-            case RED:
-                return Color.RED;
-            case YELLOW:
-                return Color.YELLOW;
-            case BLUE:
-                return new Color(100, 149, 237); // Cornflower blue - lighter and more visible
-            case GREEN:
-                return new Color(34, 139, 34);
-            case PURPLE:
-                return new Color(148, 0, 211);
-            case ORANGE:
-                return new Color(255, 165, 0);
-            default:
-                return Color.GRAY;
-        }
+        return switch (coinColor) {
+            case RED -> Color.RED;
+            case YELLOW -> Color.YELLOW;
+            case BLUE -> new Color(100, 149, 237);
+            case GREEN -> new Color(34, 139, 34);
+            case PURPLE -> new Color(148, 0, 211);
+            case ORANGE -> new Color(255, 165, 0);
+        };
     }
 
     private void drawLuckyCoin(Graphics2D g2, int x, int y, int size) {
@@ -228,11 +218,12 @@ public class BoardDrawing extends JComponent implements MouseListener {
         int centerX = x + size / 2;
         int centerY = y + size / 2;
         int leafSize = size / 5;
+        double leafStart = (double) leafSize/2;
 
-        g2.fill(new Ellipse2D.Double(centerX - leafSize / 2, centerY - leafSize - 2, leafSize, leafSize));
-        g2.fill(new Ellipse2D.Double(centerX - leafSize / 2, centerY + 2, leafSize, leafSize));
-        g2.fill(new Ellipse2D.Double(centerX - leafSize - 2, centerY - leafSize / 2, leafSize, leafSize));
-        g2.fill(new Ellipse2D.Double(centerX + 2, centerY - leafSize / 2, leafSize, leafSize));
+        g2.fill(new Ellipse2D.Double(centerX - leafStart, centerY - leafSize - 2, leafSize, leafSize));
+        g2.fill(new Ellipse2D.Double(centerX - leafStart, centerY + 2, leafSize, leafSize));
+        g2.fill(new Ellipse2D.Double(centerX - leafSize - 2, centerY - leafStart, leafSize, leafSize));
+        g2.fill(new Ellipse2D.Double(centerX + 2, centerY - leafStart, leafSize, leafSize));
         g2.fillRect(centerX - 1, centerY, 2, size / 4);
     }
 

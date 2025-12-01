@@ -1,12 +1,10 @@
-package com.connect4.view;
+package src.main.java.com.connect4.view;
 
 /**
  * Cell.java - NEW CLASS
- * 
  * This class represents a single cell on the Connect Four game board.
  * It encapsulates the state of a cell using object-oriented principles,
  * replacing the previous Boolean-based representation.
- * 
  * The Cell class provides:
  * i. A value representing whether the cell is available or not
  * ii. A value stating whether the cell is occupied by a red coin
@@ -16,10 +14,6 @@ package com.connect4.view;
  * @author Refactored for multi-view support
  */
 public class Cell {
-
-    // =========================================================================
-    // NEW: Enum to represent all possible cell states
-    // =========================================================================
     public enum CellState {
         EMPTY, // Cell is available for placement
         RED, // Cell contains a red coin
@@ -31,21 +25,12 @@ public class Cell {
         LUCKY // Cell contains a lucky coin (turquoise with 4-leaf clover)
     }
 
-    // =========================================================================
-    // NEW: Instance variable to store the cell's current state
-    // =========================================================================
     private CellState state;
 
-    // =========================================================================
-    // NEW: Constructor - initializes cell as empty (available)
-    // =========================================================================
     public Cell() {
         this.state = CellState.EMPTY;
     }
 
-    // =========================================================================
-    // NEW: Check if cell is available for a new piece
-    // =========================================================================
     /**
      * Checks if the cell is available for placing a new coin.
      * 
@@ -55,9 +40,6 @@ public class Cell {
         return state == CellState.EMPTY;
     }
 
-    // =========================================================================
-    // NEW: Check if cell is occupied by a red coin
-    // =========================================================================
     /**
      * Checks if the cell contains a red coin.
      * 
@@ -67,9 +49,6 @@ public class Cell {
         return state == CellState.RED;
     }
 
-    // =========================================================================
-    // NEW: Check if cell is occupied by a yellow coin
-    // =========================================================================
     /**
      * Checks if the cell contains a yellow coin.
      * 
@@ -115,9 +94,6 @@ public class Cell {
         return state == CellState.ORANGE;
     }
 
-    // =========================================================================
-    // NEW: Check if cell contains a lucky coin
-    // =========================================================================
     /**
      * Checks if the cell contains a lucky coin (turquoise with 4-leaf clover).
      * 
@@ -127,9 +103,6 @@ public class Cell {
         return state == CellState.LUCKY;
     }
 
-    // =========================================================================
-    // NEW: Check if cell is occupied (not empty)
-    // =========================================================================
     /**
      * Checks if the cell is occupied by any type of coin.
      * 
@@ -139,9 +112,6 @@ public class Cell {
         return state != CellState.EMPTY;
     }
 
-    // =========================================================================
-    // NEW: Get the current state of the cell
-    // =========================================================================
     /**
      * Gets the current state of the cell.
      * 
@@ -151,9 +121,6 @@ public class Cell {
         return state;
     }
 
-    // =========================================================================
-    // NEW: Set the cell state
-    // =========================================================================
     /**
      * Sets the state of the cell.
      * 
@@ -163,9 +130,6 @@ public class Cell {
         this.state = state;
     }
 
-    // =========================================================================
-    // NEW: Convenience method to place a red coin
-    // =========================================================================
     /**
      * Places a red coin in this cell.
      */
@@ -173,9 +137,6 @@ public class Cell {
         this.state = CellState.RED;
     }
 
-    // =========================================================================
-    // NEW: Convenience method to place a yellow coin
-    // =========================================================================
     /**
      * Places a yellow coin in this cell.
      */
@@ -215,9 +176,6 @@ public class Cell {
         this.state = color;
     }
 
-    // =========================================================================
-    // NEW: Convenience method to place a lucky coin
-    // =========================================================================
     /**
      * Places a lucky coin (turquoise with 4-leaf clover) in this cell.
      */
@@ -225,9 +183,6 @@ public class Cell {
         this.state = CellState.LUCKY;
     }
 
-    // =========================================================================
-    // NEW: Clear the cell (make it empty/available)
-    // =========================================================================
     /**
      * Clears the cell, making it available for new coins.
      */
@@ -235,9 +190,6 @@ public class Cell {
         this.state = CellState.EMPTY;
     }
 
-    // =========================================================================
-    // NEW: String representation for text-based view
-    // =========================================================================
     /**
      * Returns a string representation of the cell for text display.
      * 
@@ -245,52 +197,33 @@ public class Cell {
      */
     @Override
     public String toString() {
-        switch (state) {
-            case RED:
-                return "R";
-            case YELLOW:
-                return "Y";
-            case BLUE:
-                return "B";
-            case GREEN:
-                return "G";
-            case PURPLE:
-                return "P";
-            case ORANGE:
-                return "O";
-            case LUCKY:
-                return "L";
-            default:
-                return ".";
-        }
+        return switch (state) {
+            case RED -> "R";
+            case YELLOW -> "Y";
+            case BLUE -> "B";
+            case GREEN -> "G";
+            case PURPLE -> "P";
+            case ORANGE -> "O";
+            case LUCKY -> "L";
+            default -> ".";
+        };
     }
 
-    // =========================================================================
-    // NEW: Get color representation for display purposes
-    // =========================================================================
     /**
      * Returns a descriptive color name for the cell contents.
      * 
      * @return color name string
      */
     public String getColorName() {
-        switch (state) {
-            case RED:
-                return "Red";
-            case YELLOW:
-                return "Yellow";
-            case BLUE:
-                return "Blue";
-            case GREEN:
-                return "Green";
-            case PURPLE:
-                return "Purple";
-            case ORANGE:
-                return "Orange";
-            case LUCKY:
-                return "Lucky (Turquoise)";
-            default:
-                return "Empty";
-        }
+        return switch (state) {
+            case RED -> "Red";
+            case YELLOW -> "Yellow";
+            case BLUE -> "Blue";
+            case GREEN -> "Green";
+            case PURPLE -> "Purple";
+            case ORANGE -> "Orange";
+            case LUCKY -> "Lucky (Turquoise)";
+            default -> "Empty";
+        };
     }
 }
