@@ -29,3 +29,8 @@
 /SaveLoadManager$GameSnapshot.class
 /SaveLoadManager.class
 /TextView.class
+.gradle
+.idea
+build
+CHANGES.md
+
