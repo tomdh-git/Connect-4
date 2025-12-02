@@ -5,6 +5,7 @@ import java.awt.event.*;
 import java.lang.reflect.InvocationTargetException;
 import javax.swing.*;
 
+import src.main.java.com.connect4.player.AIPlayer;
 import src.main.java.com.connect4.player.Player;
 import src.main.java.com.connect4.settings.DifficultyLevel;
 import src.main.java.com.connect4.settings.GameSettings;
