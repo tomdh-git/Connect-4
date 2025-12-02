@@ -24,7 +24,7 @@ import java.awt.Point;
  */
 public class SaveLoadManager {
 
-    private static final String SAVE_DIRECTORY = "saves";
+    public static final String SAVE_DIRECTORY = "saves";
     private static final String FILE_EXTENSION = ".c4save";
 
     /**

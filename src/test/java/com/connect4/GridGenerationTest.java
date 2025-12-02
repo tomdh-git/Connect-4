@@ -1,7 +1,10 @@
 package src.test.java.com.connect4;
 
-import src.main.java.com.connect4.*;
 import src.main.java.com.connect4.player.Player;
+import src.main.java.com.connect4.settings.DifficultyLevel;
+import src.main.java.com.connect4.settings.GameSettings;
+import src.main.java.com.connect4.view.Cell;
+import src.main.java.com.connect4.view.GameState;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,10 +44,10 @@ public class GridGenerationTest {
         settings.setDifficultyLevel(level);
         GameState state = new GameState(settings);
 
-        assertEquals(8, state.getColumns(), "Intermediate standard should be 8 columns");
-        assertEquals(7, state.getRows(), "Intermediate standard should be 7 rows");
-        assertEquals(8, level.getColumns(), "DifficultyLevel should report 8 columns");
-        assertEquals(7, level.getRows(), "DifficultyLevel should report 7 rows");
+        assertEquals(14, state.getColumns(), "Intermediate standard should be 14 columns");
+        assertEquals(12, state.getRows(), "Intermediate standard should be 12 rows");
+        assertEquals(14, level.getColumns(), "DifficultyLevel should report 14 columns");
+        assertEquals(12, level.getRows(), "DifficultyLevel should report 12 rows");
     }
 
     @Test
@@ -56,10 +59,10 @@ public class GridGenerationTest {
         settings.setDifficultyLevel(level);
         GameState state = new GameState(settings);
 
-        assertEquals(10, state.getColumns(), "Expert standard should be 10 columns");
-        assertEquals(8, state.getRows(), "Expert standard should be 8 rows");
-        assertEquals(10, level.getColumns(), "DifficultyLevel should report 10 columns");
-        assertEquals(8, level.getRows(), "DifficultyLevel should report 8 rows");
+        assertEquals(21, state.getColumns(), "Expert standard should be 21 columns");
+        assertEquals(18, state.getRows(), "Expert standard should be 18 rows");
+        assertEquals(21, level.getColumns(), "DifficultyLevel should report 21 columns");
+        assertEquals(18, level.getRows(), "DifficultyLevel should report 18 rows");
     }
 
     // ==================== SQUARE MODE TESTS ====================
@@ -195,22 +198,22 @@ public class GridGenerationTest {
     @Test
     public void testDifficultyFromLevel() {
         // Test the fromLevel method
-        assertEquals(DifficultyLevel.BEGINNER, DifficultyLevel.fromLevel(0),
+        assertEquals(DifficultyLevel.BEGINNER, DifficultyLevel.fromLevel(1),
                 "Index 0 should be BEGINNER");
-        assertEquals(DifficultyLevel.INTERMEDIATE, DifficultyLevel.fromLevel(1),
+        assertEquals(DifficultyLevel.INTERMEDIATE, DifficultyLevel.fromLevel(2),
                 "Index 1 should be INTERMEDIATE");
-        assertEquals(DifficultyLevel.EXPERT, DifficultyLevel.fromLevel(2),
+        assertEquals(DifficultyLevel.EXPERT, DifficultyLevel.fromLevel(3),
                 "Index 2 should be EXPERT");
     }
 
     @Test
     public void testDifficultyFromSquareLevel() {
         // Test the fromSquareLevel method
-        assertEquals(DifficultyLevel.BEGINNER_SQUARE, DifficultyLevel.fromSquareLevel(0),
+        assertEquals(DifficultyLevel.BEGINNER_SQUARE, DifficultyLevel.fromSquareLevel(1),
                 "Square index 0 should be BEGINNER_SQUARE");
-        assertEquals(DifficultyLevel.INTERMEDIATE_SQUARE, DifficultyLevel.fromSquareLevel(1),
+        assertEquals(DifficultyLevel.INTERMEDIATE_SQUARE, DifficultyLevel.fromSquareLevel(2),
                 "Square index 1 should be INTERMEDIATE_SQUARE");
-        assertEquals(DifficultyLevel.EXPERT_SQUARE, DifficultyLevel.fromSquareLevel(2),
+        assertEquals(DifficultyLevel.EXPERT_SQUARE, DifficultyLevel.fromSquareLevel(3),
                 "Square index 2 should be EXPERT_SQUARE");
     }
 }

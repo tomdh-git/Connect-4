@@ -221,16 +221,21 @@ public class GameState {
         cells[luckyOfferColumn][luckyOfferRow].setLucky();
     }
 
-    public void acceptLuckyOffer() {
+    public boolean acceptLuckyOffer() {
         error = null;
 
         if (!luckyOfferPending) {
             error = "No lucky coin offer pending.";
-            return;
+            return false;
         }
 
-        Player currentPlayer = getCurrentPlayer();
-        setColor(luckyOfferColumn, luckyOfferRow, currentPlayer);
+        // The lucky coin belongs to the player who just moved (triggered the offer).
+        // Since move() switched the turn, we need the *previous* player.
+        // If it's currently P1's turn, P2 was the last to move.
+        // If it's currently P2's turn, P1 was the last to move.
+        Player luckyPlayer = player1Turn ? settings.getPlayer2() : settings.getPlayer1();
+
+        setColor(luckyOfferColumn, luckyOfferRow, luckyPlayer);
 
         settings.incrementLuckyCoins();
         wasLuckyCoin.push(true);
@@ -243,14 +248,15 @@ public class GameState {
         player1Turn = !player1Turn;
         checkForWin();
 
+        return true;
     }
 
-    public void rejectLuckyOffer() {
+    public boolean rejectLuckyOffer() {
         error = null;
 
         if (!luckyOfferPending) {
             error = "No lucky coin offer pending.";
-            return;
+            return false;
         }
 
         cells[luckyOfferColumn][luckyOfferRow].clear();
@@ -259,6 +265,7 @@ public class GameState {
         luckyOfferColumn = -1;
         luckyOfferRow = -1;
 
+        return true;
     }
 
     public boolean isLuckyOfferPending() {
@@ -516,7 +523,9 @@ public class GameState {
         }
 
         if (luckyOfferPending) {
-            return getCurrentPlayer().getName() + ": Lucky coin at col " +
+            // The offer is for the player who just moved (previous player)
+            Player luckyPlayer = player1Turn ? settings.getPlayer2() : settings.getPlayer1();
+            return luckyPlayer.getName() + ": Lucky coin at col " +
                     (luckyOfferColumn + 1) + "! Accept (A) or Reject (R)?";
         }
 
@@ -594,5 +603,17 @@ public class GameState {
         this.luckyOfferPending = pending;
         this.luckyOfferColumn = col;
         this.luckyOfferRow = row;
+    }
+
+    @Override
+    public String toString() {
+        String res = "";
+        for (int row = 0; row < cells.length; row++) {
+            res += "\n";
+            for (int col = 0; col < cells[row].length; col++) {
+                res += cells[row][col].toString();
+            }
+        }
+        return res;
     }
 }

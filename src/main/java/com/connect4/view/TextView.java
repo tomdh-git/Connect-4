@@ -2,7 +2,6 @@ package src.main.java.com.connect4.view;
 
 import java.util.Scanner;
 
-import src.main.java.com.connect4.player.AIPlayer;
 import src.main.java.com.connect4.player.Player;
 import src.main.java.com.connect4.settings.GameSettings;
 import src.main.java.com.connect4.settings.SaveLoadManager;
