@@ -100,8 +100,19 @@ public class GUIView implements GameView {
         frame.add(board, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
-        int width = Math.max(750, state.getColumns() * 50 + 150);
-        int height = Math.max(600, state.getRows() * 40 + 250);
+        // Get screen dimensions to avoid windows larger than screen
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int maxWidth = (int) (screenSize.width * 0.9); // 90% of screen width
+        int maxHeight = (int) (screenSize.height * 0.85); // 85% of screen height
+
+        // Calculate ideal window size based on board size
+        int width = Math.max(750, state.getColumns() * 50 + 200);
+        int height = Math.max(600, state.getRows() * 50 + 300);
+
+        // Cap at screen size
+        width = Math.min(width, maxWidth);
+        height = Math.min(height, maxHeight);
+
         frame.setSize(width, height);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -131,12 +142,12 @@ public class GUIView implements GameView {
         JMenuItem switchToText = new JMenuItem("Switch to Text Mode");
         switchToText.addActionListener(e -> switchToTextView());
 
-        JMenuItem backToMenu = new JMenuItem("Back to Main Menu");
-        backToMenu.addActionListener(e -> backToMainMenu());
+        JMenuItem exitGame = new JMenuItem("Exit Game");
+        exitGame.addActionListener(e -> backToMainMenu());
 
         viewMenu.add(switchToText);
         viewMenu.addSeparator();
-        viewMenu.add(backToMenu);
+        viewMenu.add(exitGame);
 
         menuBar.add(gameMenu);
         menuBar.add(viewMenu);
@@ -172,7 +183,7 @@ public class GUIView implements GameView {
     private void switchToTextView() {
         int choice = JOptionPane.showConfirmDialog(
                 frame,
-                "Switch to Text Mode?\n\nThe game will continue in the TERMINAL window\nwhere you ran 'java MainMenu'.\n\nLook for the console to type your moves.",
+                "Switch to Text Mode?\n\nThe game will continue in the TERMINAL window.\n\nLook for the console to type your moves.",
                 "Switch View",
                 JOptionPane.YES_NO_OPTION);
 
@@ -193,18 +204,17 @@ public class GUIView implements GameView {
     private void backToMainMenu() {
         int choice = JOptionPane.showConfirmDialog(
                 frame,
-                "Return to Main Menu?\nUnsaved progress will be lost.",
-                "Main Menu",
+                "Exit game?\nUnsaved progress will be lost.",
+                "Exit",
                 JOptionPane.YES_NO_OPTION);
 
         if (choice == JOptionPane.YES_OPTION) {
+            synchronized (windowLock) {
+                windowClosed = true;
+                windowLock.notifyAll();
+            }
             frame.dispose();
-            windowClosed = true;
-
-            SwingUtilities.invokeLater(() -> {
-                MainMenu menu = new MainMenu();
-                menu.setVisible(true);
-            });
+            System.exit(0);
         }
     }
 
@@ -228,13 +238,11 @@ public class GUIView implements GameView {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        mainPanel.add(new JLabel("Board Type:"), gbc);
+        mainPanel.add(new JLabel("Four Corners Rule:"), gbc);
 
-        JComboBox<String> boardTypeCombo = new JComboBox<>(new String[] {
-                "Rectangular (Standard)", "Square (4-Corners Win)"
-        });
+        JCheckBox fourCornersCheck = new JCheckBox("Enable (Any Square)");
         gbc.gridx = 1;
-        mainPanel.add(boardTypeCombo, gbc);
+        mainPanel.add(fourCornersCheck, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -284,19 +292,6 @@ public class GUIView implements GameView {
         gbc.gridx = 1;
         mainPanel.add(p2Color, gbc);
 
-        boardTypeCombo.addActionListener(e -> {
-            boolean isSquare = boardTypeCombo.getSelectedIndex() == 1;
-            if (isSquare) {
-                diffCombo.setModel(new DefaultComboBoxModel<>(new String[] {
-                        "Beginner (7x7)", "Intermediate (12x12)", "Expert (18x18)"
-                }));
-            } else {
-                diffCombo.setModel(new DefaultComboBoxModel<>(new String[] {
-                        "Beginner (7x6)", "Intermediate (14x12)", "Expert (21x18)"
-                }));
-            }
-        });
-
         modeCombo.addActionListener(e -> {
             boolean vsComputer = modeCombo.getSelectedIndex() == 1;
             diffCombo.setEnabled(vsComputer);
@@ -314,15 +309,10 @@ public class GUIView implements GameView {
 
         startBtn.addActionListener(e -> {
             boolean vsComputer = modeCombo.getSelectedIndex() == 1;
-            boolean isSquare = boardTypeCombo.getSelectedIndex() == 1;
+            boolean useFourCorners = fourCornersCheck.isSelected();
             int diffIndex = diffCombo.getSelectedIndex() + 1;
 
-            DifficultyLevel level;
-            if (isSquare) {
-                level = DifficultyLevel.fromSquareLevel(diffIndex);
-            } else {
-                level = DifficultyLevel.fromLevel(diffIndex);
-            }
+            DifficultyLevel level = DifficultyLevel.fromLevel(diffIndex);
 
             Player.CoinColor color1 = Player.CoinColor.values()[p1Color.getSelectedIndex()];
             Player.CoinColor color2 = Player.CoinColor.values()[p2Color.getSelectedIndex()];
@@ -337,10 +327,10 @@ public class GUIView implements GameView {
 
             GameSettings settings;
             if (vsComputer) {
-                settings = new GameSettings(level, player1, true);
+                settings = new GameSettings(level, player1, true, useFourCorners);
             } else {
                 Player player2 = new Player(2, p2Name.getText(), Player.PlayerType.HUMAN, color2);
-                settings = new GameSettings(player1, player2);
+                settings = new GameSettings(player1, player2, useFourCorners);
                 settings.setDifficultyLevel(level);
             }
 
@@ -348,8 +338,14 @@ public class GUIView implements GameView {
             board.setGameState(state);
             setupAIIfNeeded();
 
-            int width = Math.max(750, state.getColumns() * 50 + 150);
-            int height = Math.max(600, state.getRows() * 40 + 250);
+            // Get screen dimensions
+            Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+            int maxWidth = (int) (screenSize.width * 0.9);
+            int maxHeight = (int) (screenSize.height * 0.85);
+
+            // Calculate and cap window size
+            int width = Math.min(Math.max(750, state.getColumns() * 50 + 200), maxWidth);
+            int height = Math.min(Math.max(600, state.getRows() * 50 + 300), maxHeight);
             frame.setSize(width, height);
 
             dialog.dispose();
@@ -408,8 +404,14 @@ public class GUIView implements GameView {
                     board.setGameState(state);
                     setupAIIfNeeded();
 
-                    int width = Math.max(750, state.getColumns() * 50 + 150);
-                    int height = Math.max(600, state.getRows() * 40 + 250);
+                    // Get screen dimensions
+                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                    int maxWidth = (int) (screenSize.width * 0.9);
+                    int maxHeight = (int) (screenSize.height * 0.85);
+
+                    // Calculate and cap window size
+                    int width = Math.min(Math.max(750, state.getColumns() * 50 + 200), maxWidth);
+                    int height = Math.min(Math.max(600, state.getRows() * 50 + 300), maxHeight);
                     frame.setSize(width, height);
 
                     update();
@@ -487,7 +489,12 @@ public class GUIView implements GameView {
         }
 
         if (state.isLuckyOfferPending()) {
-            showLuckyOfferDialog();
+            // Check if the lucky coin belongs to a human player
+            Player luckyOwner = state.getLuckyOfferPlayer();
+            if (luckyOwner != null && luckyOwner.isHuman()) {
+                showLuckyOfferDialog();
+            }
+            // If it belongs to computer, AI will handle it automatically
             return;
         }
 
@@ -499,7 +506,14 @@ public class GUIView implements GameView {
             update();
 
             if (state.isLuckyOfferPending()) {
-                showLuckyOfferDialog();
+                // Check if the lucky coin belongs to a human player
+                Player luckyOwner = state.getLuckyOfferPlayer();
+                if (luckyOwner != null && luckyOwner.isHuman()) {
+                    showLuckyOfferDialog();
+                } else {
+                    // Computer's lucky coin - trigger AI to handle it
+                    triggerAIMove();
+                }
             } else if (state.getGameOver()) {
                 showGameOverMessage();
             } else {
@@ -515,7 +529,7 @@ public class GUIView implements GameView {
         String message = String.format(
                 """
                         A Lucky Coin appeared at column %d, row %d!
-                        
+
                         Do you want to claim it?""",
                 state.getLuckyOfferColumn() + 1,
                 state.getLuckyOfferRow() + 1);

@@ -196,31 +196,31 @@ public class MainMenu extends JFrame {
         panel.setBackground(new Color(0, 51, 102));
         panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
-        JLabel label = new JLabel("Select Board Type", SwingConstants.CENTER);
+        JLabel label = new JLabel("Four Corners Rule", SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 28));
         label.setForeground(Color.WHITE);
 
         JPanel buttonPanel = new JPanel(new GridLayout(3, 1, 10, 20));
         buttonPanel.setOpaque(false);
 
-        JButton rectBtn = createMenuButton("Rectangular (Standard)");
-        JButton squareBtn = createMenuButton("Square (Four Corners Mode)");
+        JButton disabledBtn = createMenuButton("Disabled (Standard)");
+        JButton enabledBtn = createMenuButton("Enabled (Any Square)");
         JButton backBtn = createMenuButton("Back");
 
-        rectBtn.addActionListener(e -> {
-            mainPanel.putClientProperty("boardType", "rectangular");
+        disabledBtn.addActionListener(e -> {
+            mainPanel.putClientProperty("fourCorners", false);
             cardLayout.show(mainPanel, "difficulty");
         });
 
-        squareBtn.addActionListener(e -> {
-            mainPanel.putClientProperty("boardType", "square");
+        enabledBtn.addActionListener(e -> {
+            mainPanel.putClientProperty("fourCorners", true);
             cardLayout.show(mainPanel, "difficulty");
         });
 
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "viewType"));
 
-        buttonPanel.add(rectBtn);
-        buttonPanel.add(squareBtn);
+        buttonPanel.add(disabledBtn);
+        buttonPanel.add(enabledBtn);
         buttonPanel.add(backBtn);
 
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -228,7 +228,7 @@ public class MainMenu extends JFrame {
         centerPanel.add(buttonPanel);
 
         JLabel info = new JLabel(
-                "<html><center>Square boards enable Four Corners win mode:<br>Capture all 4 corners to win!</center></html>",
+                "<html><center>Four Corners Rule:<br>Form any square of 4 pieces to win!</center></html>",
                 SwingConstants.CENTER);
         return getjPanel(panel, label, centerPanel, info);
     }
@@ -245,9 +245,9 @@ public class MainMenu extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(4, 1, 10, 15));
         buttonPanel.setOpaque(false);
 
-        JButton beginnerBtn = createMenuButton("Beginner (7x6 or 7x7)");
-        JButton intermediateBtn = createMenuButton("Intermediate (14x12 or 12x12)");
-        JButton expertBtn = createMenuButton("Expert (21x18 or 18x18)");
+        JButton beginnerBtn = createMenuButton("Beginner (7x6)");
+        JButton intermediateBtn = createMenuButton("Intermediate (14x12)");
+        JButton expertBtn = createMenuButton("Expert (21x18)");
         JButton backBtn = createMenuButton("Back");
 
         beginnerBtn.addActionListener(e -> {
@@ -355,16 +355,11 @@ public class MainMenu extends JFrame {
         JButton backBtn = createMenuButton("Back");
 
         startBtn.addActionListener(e -> {
-            String boardType = (String) mainPanel.getClientProperty("boardType");
+            Boolean fourCorners = (Boolean) mainPanel.getClientProperty("fourCorners");
             Integer diff = (Integer) mainPanel.getClientProperty("difficulty");
-            boolean isSquare = "square".equals(boardType);
+            boolean useFourCorners = fourCorners != null && fourCorners;
 
-            DifficultyLevel level;
-            if (isSquare) {
-                level = DifficultyLevel.fromSquareLevel(diff != null ? diff : 1);
-            } else {
-                level = DifficultyLevel.fromLevel(diff != null ? diff : 1);
-            }
+            DifficultyLevel level = DifficultyLevel.fromLevel(diff != null ? diff : 1);
 
             Player.CoinColor color1 = Player.CoinColor.values()[p1Color.getSelectedIndex()];
             Player.CoinColor color2 = Player.CoinColor.values()[p2Color.getSelectedIndex()];
@@ -378,7 +373,7 @@ public class MainMenu extends JFrame {
             Player player1 = new Player(1, p1Name.getText().trim(), Player.PlayerType.HUMAN, color1);
             Player player2 = new Player(2, p2Name.getText().trim(), Player.PlayerType.HUMAN, color2);
 
-            GameSettings settings = new GameSettings(player1, player2);
+            GameSettings settings = new GameSettings(player1, player2, useFourCorners);
             settings.setDifficultyLevel(level);
 
             startGame(settings);
@@ -387,7 +382,8 @@ public class MainMenu extends JFrame {
         return getjPanel(panel, label, formPanel, buttonPanel, startBtn, backBtn);
     }
 
-    private JPanel getjPanel(JPanel panel, JLabel label, JPanel formPanel, JPanel buttonPanel, JButton startBtn, JButton backBtn) {
+    private JPanel getjPanel(JPanel panel, JLabel label, JPanel formPanel, JPanel buttonPanel, JButton startBtn,
+            JButton backBtn) {
         backBtn.addActionListener(e -> cardLayout.show(mainPanel, "difficulty"));
 
         buttonPanel.add(startBtn);
@@ -448,22 +444,17 @@ public class MainMenu extends JFrame {
         JButton backBtn = createMenuButton("Back");
 
         startBtn.addActionListener(e -> {
-            String boardType = (String) mainPanel.getClientProperty("boardType");
+            Boolean fourCorners = (Boolean) mainPanel.getClientProperty("fourCorners");
             Integer diff = (Integer) mainPanel.getClientProperty("difficulty");
-            boolean isSquare = "square".equals(boardType);
+            boolean useFourCorners = fourCorners != null && fourCorners;
 
-            DifficultyLevel level;
-            if (isSquare) {
-                level = DifficultyLevel.fromSquareLevel(diff != null ? diff : 1);
-            } else {
-                level = DifficultyLevel.fromLevel(diff != null ? diff : 1);
-            }
+            DifficultyLevel level = DifficultyLevel.fromLevel(diff != null ? diff : 1);
 
             Player.CoinColor color = Player.CoinColor.values()[playerColor.getSelectedIndex()];
             Player humanPlayer = new Player(1, playerName.getText().trim(), Player.PlayerType.HUMAN, color);
             boolean humanFirst = goesFirst.getSelectedIndex() == 0;
 
-            GameSettings settings = new GameSettings(level, humanPlayer, humanFirst);
+            GameSettings settings = new GameSettings(level, humanPlayer, humanFirst, useFourCorners);
             startGame(settings);
         });
 

@@ -28,8 +28,7 @@ public enum DifficultyLevel implements Serializable {
             6, // rows
             3, // max lucky coins
             2, // AI search depth
-            4, // win condition (4 in a row)
-            false// not square
+            4// win condition (4 in a row)
     ),
 
     INTERMEDIATE(
@@ -38,8 +37,7 @@ public enum DifficultyLevel implements Serializable {
             12, // rows
             7, // max lucky coins
             4, // AI search depth
-            4, // win condition (4 in a row)
-            false// not square
+            4// win condition (4 in a row)
     ),
 
     EXPERT(
@@ -48,38 +46,7 @@ public enum DifficultyLevel implements Serializable {
             18, // rows
             11, // max lucky coins
             4, // AI search depth (reduced from 6 for performance)
-            4, // win condition (4 in a row)
-            false// not square
-    ),
-
-    BEGINNER_SQUARE(
-            "Beginner (Square)",
-            7, // columns
-            7, // rows (square!)
-            3, // max lucky coins
-            2, // AI search depth
-            4, // win condition (4 in a row)
-            true// square - four corners enabled
-    ),
-
-    INTERMEDIATE_SQUARE(
-            "Intermediate (Square)",
-            12, // columns
-            12, // rows (square!)
-            7, // max lucky coins
-            4, // AI search depth
-            4, // win condition (4 in a row)
-            true// square - four corners enabled
-    ),
-
-    EXPERT_SQUARE(
-            "Expert (Square)",
-            18, // columns
-            18, // rows (square!)
-            11, // max lucky coins
-            4, // AI search depth (reduced from 6 for performance)
-            4, // win condition (4 in a row)
-            true// square - four corners enabled
+            4// win condition (4 in a row)
     );
 
     private final String displayName;
@@ -88,18 +55,15 @@ public enum DifficultyLevel implements Serializable {
     private final int maxLuckyCoins;
     private final int aiSearchDepth;
     private final int winCondition;
-    private final boolean isSquare;
 
     DifficultyLevel(String displayName, int columns, int rows,
-            int maxLuckyCoins, int aiSearchDepth, int winCondition,
-            boolean isSquare) {
+            int maxLuckyCoins, int aiSearchDepth, int winCondition) {
         this.displayName = displayName;
         this.columns = columns;
         this.rows = rows;
         this.maxLuckyCoins = maxLuckyCoins;
         this.aiSearchDepth = aiSearchDepth;
         this.winCondition = winCondition;
-        this.isSquare = isSquare;
     }
 
     public String getDisplayName() {
@@ -126,22 +90,17 @@ public enum DifficultyLevel implements Serializable {
         return winCondition;
     }
 
-    public boolean isSquare() {
-        return isSquare;
-    }
-
     public boolean isFourCornersEnabled() {
-        return isSquare;
+        return false; // Deprecated in DifficultyLevel, moved to GameSettings
     }
 
     public String getBoardSizeString() {
-        return columns + " x " + rows + (isSquare ? " (Square)" : "");
+        return columns + " x " + rows;
     }
 
     public String getDescription() {
-        String corners = isSquare ? ", 4-corners win" : "";
-        return String.format("%s: %dx%d board, max %d lucky coins, AI depth %d%s",
-                displayName, columns, rows, maxLuckyCoins, aiSearchDepth, corners);
+        return String.format("%s: %dx%d board, max %d lucky coins, AI depth %d",
+                displayName, columns, rows, maxLuckyCoins, aiSearchDepth);
     }
 
     @Override
@@ -154,9 +113,6 @@ public enum DifficultyLevel implements Serializable {
             case 1 -> BEGINNER;
             case 2 -> INTERMEDIATE;
             case 3 -> EXPERT;
-            case 4 -> BEGINNER_SQUARE;
-            case 5 -> INTERMEDIATE_SQUARE;
-            case 6 -> EXPERT_SQUARE;
             default -> BEGINNER;
         };
     }
@@ -168,29 +124,5 @@ public enum DifficultyLevel implements Serializable {
             descriptions[i] = (i + 1) + ". " + levels[i].getDescription();
         }
         return descriptions;
-    }
-
-    public static String[] getRectangularDescriptions() {
-        return new String[] {
-                "1. " + BEGINNER.getDescription(),
-                "2. " + INTERMEDIATE.getDescription(),
-                "3. " + EXPERT.getDescription()
-        };
-    }
-
-    public static String[] getSquareDescriptions() {
-        return new String[] {
-                "1. " + BEGINNER_SQUARE.getDescription(),
-                "2. " + INTERMEDIATE_SQUARE.getDescription(),
-                "3. " + EXPERT_SQUARE.getDescription()
-        };
-    }
-
-    public static DifficultyLevel fromSquareLevel(int level) {
-        return switch (level) {
-            case 2 -> INTERMEDIATE_SQUARE;
-            case 3 -> EXPERT_SQUARE;
-            default -> BEGINNER_SQUARE;
-        };
     }
 }

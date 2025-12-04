@@ -133,7 +133,7 @@ public class TextView implements GameView {
         Cell[][] cells = state.getCells();
         boolean isSquare = state.getSettings().getDifficultyLevel().isFourCornersEnabled();
 
-        System.out.print(BLUE + "  ╔");
+        System.out.print(BLUE + "   ╔");
         for (int i = 0; i < cols; i++) {
             System.out.print("═══");
             if (i < cols - 1)
@@ -142,7 +142,8 @@ public class TextView implements GameView {
         System.out.println("╗" + RESET);
 
         for (int row = rows - 1; row >= 0; row--) {
-            System.out.print(BLUE + "  ║" + RESET);
+            System.out.printf("%2d ", row + 1); // Row number
+            System.out.print(BLUE + "║" + RESET);
             for (int col = 0; col < cols; col++) {
                 Cell cell = cells[col][row];
                 String cellDisplay = getCellDisplay(cell, col, row, rows, cols, isSquare);
@@ -151,7 +152,7 @@ public class TextView implements GameView {
             System.out.println();
 
             if (row > 0) {
-                System.out.print(BLUE + "  ╠");
+                System.out.print("   " + BLUE + "╠");
                 for (int i = 0; i < cols; i++) {
                     System.out.print("═══");
                     if (i < cols - 1)
@@ -161,7 +162,7 @@ public class TextView implements GameView {
             }
         }
 
-        System.out.print(BLUE + "  ╚");
+        System.out.print(BLUE + "   ╚");
         for (int i = 0; i < cols; i++) {
             System.out.print("═══");
             if (i < cols - 1)
@@ -169,7 +170,7 @@ public class TextView implements GameView {
         }
         System.out.println("╝" + RESET);
 
-        System.out.print("  ");
+        System.out.print("   ");
         for (int i = 1; i <= cols; i++) {
             System.out.printf(" %2d", i);
             if (i < cols)
@@ -434,20 +435,6 @@ public class TextView implements GameView {
         }
     }
 
-    private void handleBackToMenu() {
-        System.out.print("Return to main menu? Unsaved progress will be lost. (Y/N): ");
-        String confirm = scanner.nextLine().trim().toUpperCase();
-        if (confirm.equals("Y") || confirm.equals("YES")) {
-            displayMessage("Returning to main menu...");
-            running = false;
-
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                MainMenu menu = new MainMenu();
-                menu.setVisible(true);
-            });
-        }
-    }
-
     private void setupAIIfNeeded() {
         if (state.getSettings().isVsComputer()) {
             Player computer = state.getSettings().getComputerPlayer();
@@ -498,8 +485,21 @@ public class TextView implements GameView {
                 displayError(state.getError());
             }
 
-            if (!state.getGameOver() && aiPlayer != null &&
-                    state.getCurrentPlayer().isComputer()) {
+            // Check if there's a lucky coin offer pending
+            if (state.isLuckyOfferPending()) {
+                Player luckyOwner = state.getLuckyOfferPlayer();
+
+                // If the lucky coin belongs to the computer, let AI handle it
+                if (luckyOwner != null && luckyOwner.isComputer() && aiPlayer != null) {
+                    makeAIMove();
+                    continue;
+                }
+                // Otherwise, it belongs to human - they'll accept/reject via input
+            }
+
+            // Check if it's the computer's turn for a regular move
+            if (!state.getGameOver() && !state.isLuckyOfferPending() &&
+                    aiPlayer != null && state.getCurrentPlayer().isComputer()) {
                 makeAIMove();
                 continue;
             }
@@ -528,7 +528,7 @@ public class TextView implements GameView {
                     }
                     break;
                 case -9:
-                    handleBackToMenu();
+                    promptPlayAgain();
                     break;
                 case -8:
                     handleSwitchToGUI();

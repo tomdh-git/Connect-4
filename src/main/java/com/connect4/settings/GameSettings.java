@@ -45,6 +45,7 @@ public class GameSettings implements Serializable {
         }
     }
 
+    private boolean fourCornersEnabled;
     private GameMode gameMode;
     private DifficultyLevel difficultyLevel;
     private Player player1;
@@ -62,6 +63,7 @@ public class GameSettings implements Serializable {
         this.difficultyLevel = DifficultyLevel.BEGINNER;
         this.player1 = Player.createDefaultPlayer1();
         this.player2 = Player.createDefaultPlayer2();
+        this.fourCornersEnabled = false;
         applyDifficultySettings();
     }
 
@@ -73,8 +75,23 @@ public class GameSettings implements Serializable {
      * @param humanPlaysFirst true if human goes first
      */
     public GameSettings(DifficultyLevel level, Player humanPlayer, boolean humanPlaysFirst) {
+        this(level, humanPlayer, humanPlaysFirst, false);
+    }
+
+    /**
+     * Creates game settings for playing against computer with optional Four Corners
+     * rule.
+     * 
+     * @param level              the difficulty level
+     * @param humanPlayer        the human player
+     * @param humanPlaysFirst    true if human goes first
+     * @param fourCornersEnabled true if Four Corners rule is active
+     */
+    public GameSettings(DifficultyLevel level, Player humanPlayer, boolean humanPlaysFirst,
+            boolean fourCornersEnabled) {
         this.gameMode = GameMode.VS_COMPUTER;
         this.difficultyLevel = level;
+        this.fourCornersEnabled = fourCornersEnabled;
 
         // Determine computer's color
         Player.CoinColor computerColor = getOppositeColor(humanPlayer.getCoinColor());
@@ -102,10 +119,23 @@ public class GameSettings implements Serializable {
      * @param player2 second player
      */
     public GameSettings(Player player1, Player player2) {
+        this(player1, player2, false);
+    }
+
+    /**
+     * Creates game settings for two-player mode with custom players and optional
+     * Four Corners rule.
+     * 
+     * @param player1            first player (goes first)
+     * @param player2            second player
+     * @param fourCornersEnabled true if Four Corners rule is active
+     */
+    public GameSettings(Player player1, Player player2, boolean fourCornersEnabled) {
         this.gameMode = GameMode.TWO_PLAYER;
         this.difficultyLevel = DifficultyLevel.BEGINNER;
         this.player1 = player1;
         this.player2 = player2;
+        this.fourCornersEnabled = fourCornersEnabled;
         player1.setId(1);
         player2.setId(2);
         applyDifficultySettings();
@@ -299,5 +329,13 @@ public class GameSettings implements Serializable {
 
     public void setCurrentLuckyCoins(int currentLuckyCoins) {
         this.currentLuckyCoins = currentLuckyCoins;
+    }
+
+    public boolean isFourCornersEnabled() {
+        return fourCornersEnabled;
+    }
+
+    public void setFourCornersEnabled(boolean fourCornersEnabled) {
+        this.fourCornersEnabled = fourCornersEnabled;
     }
 }

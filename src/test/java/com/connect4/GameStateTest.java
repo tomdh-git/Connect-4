@@ -4,7 +4,6 @@ import src.main.java.com.connect4.view.GameState;
 import src.main.java.com.connect4.settings.GameSettings;
 import src.main.java.com.connect4.settings.DifficultyLevel;
 import src.main.java.com.connect4.player.Player;
-import src.main.java.com.connect4.view.Cell;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import static org.junit.jupiter.api.Assertions.*;

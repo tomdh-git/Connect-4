@@ -29,6 +29,7 @@ import src.main.java.com.connect4.view.GameState;
  * 3. AI (maximizing player) picks moves that maximize score
  * 4. Opponent (minimizing player) picks moves that minimize score
  * 5. Alpha-beta pruning eliminates branches that won't affect final decision
+ * 
  * @author Extended feature implementation
  */
 public class AIPlayer {
@@ -43,6 +44,7 @@ public class AIPlayer {
 
     /**
      * Creates an AI player with the specified difficulty.
+     * 
      * @param difficulty   the difficulty level
      * @param playerNumber which player the AI controls (1 or 2)
      */
@@ -77,7 +79,7 @@ public class AIPlayer {
             return validMoves.get(random.nextInt(validMoves.size()));
         }
 
-        int bestMove = validMoves.getFirst();
+        int bestMove = validMoves.get(0);
         int bestScore = Integer.MIN_VALUE;
         int alpha = Integer.MIN_VALUE;
         int beta = Integer.MAX_VALUE;
@@ -150,7 +152,7 @@ public class AIPlayer {
 
                 alpha = Math.max(alpha, score);
                 if (beta <= alpha) {
-                    break; //prune remaining branches
+                    break; // prune remaining branches
                 }
             }
 
@@ -292,7 +294,7 @@ public class AIPlayer {
 
         // Score the window
         if (ownCount > 0 && oppCount > 0) {
-            return 0; //cant win here
+            return 0; // cant win here
         }
 
         if (ownCount == 4)

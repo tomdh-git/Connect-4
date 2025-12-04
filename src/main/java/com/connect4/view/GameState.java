@@ -46,6 +46,8 @@ public class GameState {
     private int luckyOfferColumn;
     private int luckyOfferRow;
 
+    private boolean isSimulation;
+
     public GameState() {
         this(new GameSettings());
     }
@@ -55,6 +57,7 @@ public class GameState {
         this.columns = settings.getColumns();
         this.rows = settings.getRows();
         this.random = new Random();
+        this.isSimulation = false;
 
         initializeBoard();
     }
@@ -67,6 +70,7 @@ public class GameState {
         this.columns = other.columns;
         this.rows = other.rows;
         this.random = new Random(); // New random to avoid coupling
+        this.isSimulation = true; // Mark as simulation to prevent stats updates
 
         // Deep copy cells
         this.cells = new Cell[columns][rows];
@@ -287,6 +291,20 @@ public class GameState {
                 luckyOfferColumn + 1, luckyOfferRow + 1);
     }
 
+    /**
+     * Gets the player who should accept/reject the lucky coin offer.
+     * This is the player who triggered the offer (made the last move).
+     * 
+     * @return the player who owns the lucky coin offer, or null if no offer pending
+     */
+    public Player getLuckyOfferPlayer() {
+        if (!luckyOfferPending)
+            return null;
+        // The lucky coin belongs to the player who just moved (triggered the offer).
+        // Since move() switched the turn, we need the *previous* player.
+        return player1Turn ? settings.getPlayer2() : settings.getPlayer1();
+    }
+
     public void moveInternal(int column) {
         error = null;
 
@@ -371,26 +389,39 @@ public class GameState {
         if (checkWinForColor(p1Color)) {
             gameOver = true;
             player1Wins = true;
-            settings.getPlayer1().recordWin();
-            settings.getPlayer2().recordLoss();
+            if (!isSimulation) {
+                settings.getPlayer1().recordWin();
+                settings.getPlayer2().recordLoss();
+            }
         } else if (checkWinForColor(p2Color)) {
             gameOver = true;
             player2Wins = true;
-            settings.getPlayer2().recordWin();
-            settings.getPlayer1().recordLoss();
-        } else if (settings.getDifficultyLevel().isFourCornersEnabled()) {
-            int cornerWinner = checkFourCorners();
-            if (cornerWinner == 1) {
-                gameOver = true;
-                player1Wins = true;
-                settings.getPlayer1().recordWin();
-                settings.getPlayer2().recordLoss();
-            } else if (cornerWinner == 2) {
-                gameOver = true;
-                player2Wins = true;
+            if (!isSimulation) {
                 settings.getPlayer2().recordWin();
                 settings.getPlayer1().recordLoss();
             }
+        } else if (settings.isFourCornersEnabled()) {
+            // System.out.println("DEBUG: Checking square win...");
+            int cornerWinner = checkSquareWin();
+            if (cornerWinner == 1) {
+                // System.out.println("DEBUG: Square win for P1 detected!");
+                gameOver = true;
+                player1Wins = true;
+                if (!isSimulation) {
+                    settings.getPlayer1().recordWin();
+                    settings.getPlayer2().recordLoss();
+                }
+            } else if (cornerWinner == 2) {
+                // System.out.println("DEBUG: Square win for P2 detected!");
+                gameOver = true;
+                player2Wins = true;
+                if (!isSimulation) {
+                    settings.getPlayer2().recordWin();
+                    settings.getPlayer1().recordLoss();
+                }
+            }
+        } else {
+            // System.out.println("DEBUG: Four corners NOT enabled.");
         }
 
         if (!gameOver) {
@@ -403,36 +434,47 @@ public class GameState {
             }
             if (isFull) {
                 gameOver = true;
-                settings.getPlayer1().recordTie();
-                settings.getPlayer2().recordTie();
+                if (!isSimulation) {
+                    settings.getPlayer1().recordTie();
+                    settings.getPlayer2().recordTie();
+                }
             }
         }
     }
 
-    private int checkFourCorners() {
-        Cell bottomLeft = cells[0][0];
-        Cell bottomRight = cells[columns - 1][0];
-        Cell topLeft = cells[0][rows - 1];
-        Cell topRight = cells[columns - 1][rows - 1];
-
-        if (bottomLeft.isAvailable() || bottomRight.isAvailable() ||
-                topLeft.isAvailable() || topRight.isAvailable()) {
-            return 0;
-        }
-
+    private int checkSquareWin() {
         Player.CoinColor p1Color = settings.getPlayer1().getCoinColor();
         Player.CoinColor p2Color = settings.getPlayer2().getCoinColor();
 
-        if (matchesColor(bottomLeft, p1Color) && matchesColor(bottomRight, p1Color) &&
-                matchesColor(topLeft, p1Color) && matchesColor(topRight, p1Color)) {
-            return 1;
-        }
+        // Check every possible square on the board
+        // Minimum square size is 2x2
+        for (int size = 1; size < Math.min(columns, rows); size++) {
+            for (int col = 0; col < columns - size; col++) {
+                for (int row = 0; row < rows - size; row++) {
+                    // Corners of the square
+                    Cell c1 = cells[col][row];
+                    Cell c2 = cells[col + size][row];
+                    Cell c3 = cells[col][row + size];
+                    Cell c4 = cells[col + size][row + size];
 
-        if (matchesColor(bottomLeft, p2Color) && matchesColor(bottomRight, p2Color) &&
-                matchesColor(topLeft, p2Color) && matchesColor(topRight, p2Color)) {
-            return 2;
-        }
+                    if (c1.isAvailable() || c2.isAvailable() || c3.isAvailable() || c4.isAvailable()) {
+                        continue;
+                    }
 
+                    if (matchesColor(c1, p1Color) && matchesColor(c2, p1Color) &&
+                            matchesColor(c3, p1Color) && matchesColor(c4, p1Color)) {
+                        // System.out.println("DEBUG: Found square for P1 at " + col + "," + row + "
+                        // size " + size);
+                        return 1;
+                    }
+
+                    if (matchesColor(c1, p2Color) && matchesColor(c2, p2Color) &&
+                            matchesColor(c3, p2Color) && matchesColor(c4, p2Color)) {
+                        return 2;
+                    }
+                }
+            }
+        }
         return 0;
     }
 

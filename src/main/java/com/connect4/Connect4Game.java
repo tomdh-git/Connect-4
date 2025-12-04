@@ -152,8 +152,8 @@ public class Connect4Game {
     private static GameSettings configureTwoPlayer() {
         System.out.println("\n--- Two Player Setup ---\n");
 
-        boolean useSquare = promptForBoardType();
-        DifficultyLevel level = useSquare ? DifficultyLevel.BEGINNER_SQUARE : DifficultyLevel.BEGINNER;
+        boolean useFourCorners = promptForFourCornersRule();
+        DifficultyLevel level = DifficultyLevel.BEGINNER;
 
         System.out.print("Player 1 name [Player 1]: ");
         String name1 = scanner.nextLine().trim();
@@ -173,13 +173,13 @@ public class Connect4Game {
 
         System.out.println("\nGame configured:");
         System.out.println("  Board: " + level.getBoardSizeString());
-        if (useSquare) {
-            System.out.println("  Four Corners Win: ENABLED");
+        if (useFourCorners) {
+            System.out.println("  Four Corners Win: ENABLED (Any Square)");
         }
         System.out.println("  " + player1.getName() + " (" + color1 + ")");
         System.out.println("  " + player2.getName() + " (" + color2 + ")\n");
 
-        GameSettings settings = new GameSettings(player1, player2);
+        GameSettings settings = new GameSettings(player1, player2, useFourCorners);
         settings.setDifficultyLevel(level);
         return settings;
     }
@@ -187,81 +187,77 @@ public class Connect4Game {
     private static GameSettings configureVsComputer() {
         System.out.println("\n--- Vs Computer Setup ---\n");
 
-        boolean useSquare = promptForBoardType();
+        boolean useFourCorners = promptForFourCornersRule();
 
         System.out.println("Difficulty Level:");
-        if (useSquare) {
-            for (String desc : DifficultyLevel.getSquareDescriptions()) {
+        {
+            for (String desc : DifficultyLevel.getAllDescriptions()) {
                 System.out.println("  " + desc);
             }
-        } else {
-            for (String desc : DifficultyLevel.getRectangularDescriptions()) {
-                System.out.println("  " + desc);
-            }
-        }
 
-        DifficultyLevel level = DifficultyLevel.BEGINNER;
-        while (true) {
-            System.out.print("\nSelect difficulty (1-3): ");
-            try {
-                int diff = Integer.parseInt(scanner.nextLine().trim());
-                if (diff >= 1 && diff <= 3) {
-                    level = useSquare ? DifficultyLevel.fromSquareLevel(diff) : DifficultyLevel.fromLevel(diff);
-                    break;
+            DifficultyLevel level = DifficultyLevel.BEGINNER;
+            while (true) {
+                System.out.print("\nSelect difficulty (1-3): ");
+                try {
+                    int diff = Integer.parseInt(scanner.nextLine().trim());
+                    if (diff >= 1 && diff <= 3) {
+                        level = DifficultyLevel.fromLevel(diff);
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.print("Got a non-number. ");
                 }
-            } catch (NumberFormatException e) {
-                System.out.print("Got a non-number. ");
+                System.out.println("Enter 1, 2, or 3.");
             }
-            System.out.println("Enter 1, 2, or 3.");
-        }
 
-        System.out.print("\nYour name [Player]: ");
-        String name = scanner.nextLine().trim();
-        if (name.isEmpty())
-            name = "Player";
+            System.out.print("\nYour name [Player]: ");
+            String name = scanner.nextLine().trim();
+            if (name.isEmpty())
+                name = "Player";
 
-        Player.CoinColor color = selectColor("Your", null);
-        Player humanPlayer = new Player(1, name, Player.PlayerType.HUMAN, color);
+            Player.CoinColor color = selectColor("Your", null);
+            Player humanPlayer = new Player(1, name, Player.PlayerType.HUMAN, color);
 
-        System.out.println("\nWho goes first?");
-        System.out.println("  [1] You");
-        System.out.println("  [2] Computer");
+            System.out.println("\nWho goes first?");
+            System.out.println("  [1] You");
+            System.out.println("  [2] Computer");
 
-        boolean humanFirst = true;
-        while (true) {
-            System.out.print("Select (1 or 2): ");
-            try {
-                int first = Integer.parseInt(scanner.nextLine().trim());
-                if (first == 1 || first == 2) {
-                    humanFirst = (first == 1);
-                    break;
+            boolean humanFirst = true;
+            while (true) {
+                System.out.print("Select (1 or 2): ");
+                try {
+                    int first = Integer.parseInt(scanner.nextLine().trim());
+                    if (first == 1 || first == 2) {
+                        humanFirst = (first == 1);
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.print("Got a non-number. ");
                 }
-            } catch (NumberFormatException e) {
-                System.out.print("Got a non-number. ");
+                System.out.println("Enter 1 or 2.");
             }
-            System.out.println("Enter 1 or 2.");
+
+            GameSettings settings = new GameSettings(level, humanPlayer, humanFirst, useFourCorners);
+
+            System.out.println("\nGame configured:");
+            System.out.println("  Difficulty: " + level.getDisplayName());
+            System.out.println("  Board: " + level.getBoardSizeString());
+            if (useFourCorners) {
+                System.out.println("  Four Corners Win: ENABLED (Any Square)");
+            }
+            System.out.println("  " + settings.getPlayer1().getName() + " goes first\n");
+
+            return settings;
         }
-
-        GameSettings settings = new GameSettings(level, humanPlayer, humanFirst);
-
-        System.out.println("\nGame configured:");
-        System.out.println("  Difficulty: " + level.getDisplayName());
-        System.out.println("  Board: " + level.getBoardSizeString());
-        if (useSquare) {
-            System.out.println("  Four Corners Win: ENABLED");
-        }
-        System.out.println("  " + settings.getPlayer1().getName() + " goes first\n");
-
-        return settings;
     }
 
-    private static boolean promptForBoardType() {
-        System.out.println("Board Type:");
-        System.out.println("  [1] Rectangular (Standard)");
-        System.out.println("  [2] Square (Four Corners Win Mode)\n");
+    private static boolean promptForFourCornersRule() {
+        System.out.println("Four Corners Rule:");
+        System.out.println("  [1] Disabled (Standard)");
+        System.out.println("  [2] Enabled (Any square of 4 wins)\n");
 
         while (true) {
-            System.out.print("Select board type (1 or 2): ");
+            System.out.print("Select rule (1 or 2): ");
             try {
                 int choice = Integer.parseInt(scanner.nextLine().trim());
                 if (choice == 1)
@@ -304,7 +300,6 @@ public class Connect4Game {
             System.out.println("Enter a valid number.");
         }
     }
-
 
     private static GameView createView(String viewChoice, GameState gameState) {
         return switch (viewChoice.toLowerCase()) {

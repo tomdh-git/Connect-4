@@ -101,28 +101,32 @@ public class BoardDrawing extends JComponent implements MouseListener {
             updateDimensions();
         }
 
-        // Draw column headers
+        // Draw column numbers (above board, no button backgrounds)
         g2.setFont(new Font("SansSerif", Font.BOLD, Math.min(16, cellSize / 2)));
+        g2.setColor(Color.DARK_GRAY);
         for (int i = 0; i < boardCols; i++) {
-            g2.setColor(new Color(100, 100, 200));
-            g2.fill(columnZones[i]);
-            g2.setColor(Color.DARK_GRAY);
-            g2.draw(columnZones[i]);
-
-            g2.setColor(Color.WHITE);
             String num = Integer.toString(i + 1);
             int w = g2.getFontMetrics().stringWidth(num);
-            g2.drawString(num,
-                    columnZones[i].x + (columnZones[i].width - w) / 2,
-                    columnZones[i].y + columnZones[i].height - 10);
+            int x = boardStartX + 10 + i * cellSize + (cellSize - w) / 2;
+            int y = boardStartY - 15;
+            g2.drawString(num, x, y);
+        }
+
+        // Draw row numbers
+        g2.setColor(Color.DARK_GRAY);
+        for (int i = 0; i < boardRows; i++) {
+            String num = Integer.toString(i + 1);
+            int w = g2.getFontMetrics().stringWidth(num);
+            int y = boardStartY + 10 + (boardRows - 1 - i) * cellSize + (cellSize + 10) / 2;
+            g2.drawString(num, boardStartX - 20, y);
         }
 
         // Draw instruction
         g2.setColor(Color.DARK_GRAY);
         g2.setFont(new Font("SansSerif", Font.ITALIC, 12));
-        String instr = "Click column number to drop piece";
+        String instr = "Click column to drop piece";
         int instrW = g2.getFontMetrics().stringWidth(instr);
-        g2.drawString(instr, boardStartX + (boardWidth - instrW) / 2, boardStartY - headerHeight - 30);
+        g2.drawString(instr, boardStartX + (boardWidth - instrW) / 2, boardStartY - 35);
 
         // Draw board
         g2.setColor(Color.BLUE);
@@ -218,7 +222,7 @@ public class BoardDrawing extends JComponent implements MouseListener {
         int centerX = x + size / 2;
         int centerY = y + size / 2;
         int leafSize = size / 5;
-        double leafStart = (double) leafSize/2;
+        double leafStart = (double) leafSize / 2;
 
         g2.fill(new Ellipse2D.Double(centerX - leafStart, centerY - leafSize - 2, leafSize, leafSize));
         g2.fill(new Ellipse2D.Double(centerX - leafStart, centerY + 2, leafSize, leafSize));
@@ -229,12 +233,22 @@ public class BoardDrawing extends JComponent implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        for (int i = 0; i < boardCols; i++) {
-            if (columnZones[i].contains(e.getPoint())) {
-                if (guiView != null) {
-                    guiView.onColumnClicked(i + 1);
+        int clickX = e.getX();
+        int clickY = e.getY();
+
+        // Check if click is within the board area (vertically)
+        if (clickY >= boardStartY && clickY <= boardStartY + boardHeight) {
+            // Determine which column was clicked based on X position
+            for (int i = 0; i < boardCols; i++) {
+                int colStartX = boardStartX + 10 + i * cellSize;
+                int colEndX = colStartX + cellSize;
+
+                if (clickX >= colStartX && clickX < colEndX) {
+                    if (guiView != null) {
+                        guiView.onColumnClicked(i + 1);
+                    }
+                    break;
                 }
-                break;
             }
         }
     }

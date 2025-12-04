@@ -1,6 +1,5 @@
 package src.test.java.com.connect4;
 
-import src.main.java.com.connect4.*;
 import src.main.java.com.connect4.player.AIPlayer;
 import src.main.java.com.connect4.player.Player;
 import src.main.java.com.connect4.settings.DifficultyLevel;
@@ -171,6 +170,9 @@ public class PlayerModeTest {
 
         // Human makes first move
         state.move(1);
+        if (state.isLuckyOfferPending()) {
+        	state.rejectLuckyOffer();
+        }
 
         // AI should be able to make a move
         int aiMove = ai.getBestMove(state);

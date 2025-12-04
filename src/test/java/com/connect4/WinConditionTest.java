@@ -1,6 +1,5 @@
 package src.test.java.com.connect4;
 
-import src.main.java.com.connect4.*;
 import src.main.java.com.connect4.player.Player;
 import src.main.java.com.connect4.settings.DifficultyLevel;
 import src.main.java.com.connect4.settings.GameSettings;
@@ -218,80 +217,6 @@ public class WinConditionTest {
 
         assertTrue(state.getGameOver(), "Game should be over");
         assertTrue(state.getPlayer2Wins(), "Player 2 should win with \\ diagonal");
-    }
-
-    // ==================== FOUR CORNERS WIN TEST ====================
-
-    @Test
-    public void testFourCornersWin_SquareBoard() {
-        // Create a square board with four corners enabled
-        DifficultyLevel squareLevel = DifficultyLevel.BEGINNER_SQUARE;
-        Player p1 = new Player(1, "P1", Player.PlayerType.HUMAN, Player.CoinColor.RED);
-        Player p2 = new Player(2, "P2", Player.PlayerType.HUMAN, Player.CoinColor.YELLOW);
-        GameSettings squareSettings = new GameSettings(p1, p2);
-        squareSettings.setDifficultyLevel(squareLevel);
-        GameState squareState = new GameState(squareSettings);
-
-        int size = squareState.getColumns(); // 7x7 for BEGINNER_SQUARE
-
-        // Player 1 captures all 4 corners
-        // Bottom-left corner (1,1)
-        squareState.move(1); // RED at (1,1)
-        if (squareState.isLuckyOfferPending()) {
-        	squareState.rejectLuckyOffer();
-        }
-
-        // Bottom-right corner (7,1)
-        squareState.move(2); // YELLOW
-        if (squareState.isLuckyOfferPending()) {
-        	squareState.rejectLuckyOffer();
-        }
-        squareState.move(size); // RED at (7,1)
-        if (squareState.isLuckyOfferPending()) {
-        	squareState.rejectLuckyOffer();
-        }
-
-        // Top-left corner - need to stack to row 7
-        squareState.move(3); // YELLOW
-        if (squareState.isLuckyOfferPending()) {
-        	squareState.rejectLuckyOffer();
-        }
-        for (int i = 0; i < size - 1; i++) {
-            squareState.move(1); // Stack RED to reach top
-            if (squareState.isLuckyOfferPending()) {
-            	squareState.rejectLuckyOffer();
-            }
-            if (i < size - 2) {
-                squareState.move(4); // YELLOW moves elsewhere
-                if (squareState.isLuckyOfferPending()) {
-                	squareState.rejectLuckyOffer();
-                }
-            }
-        }
-        // Now (1,7) is RED
-
-        // Top-right corner - stack to (7,7)
-        squareState.move(5); // YELLOW
-        if (squareState.isLuckyOfferPending()) {
-        	squareState.rejectLuckyOffer();
-        }
-        for (int i = 0; i < size - 2; i++) {
-            squareState.move(size); // Stack RED
-            if (squareState.isLuckyOfferPending()) {
-            	squareState.rejectLuckyOffer();
-            }
-            squareState.move(6); // YELLOW
-            if (squareState.isLuckyOfferPending()) {
-            	squareState.rejectLuckyOffer();
-            }
-        }
-        squareState.move(size); // RED at (7,7) - should win with 4 corners!
-        if (squareState.isLuckyOfferPending()) {
-        	squareState.rejectLuckyOffer();
-        }
-
-        assertTrue(squareState.getGameOver(), "Game should be over");
-        assertTrue(squareState.getPlayer1Wins(), "Player 1 should win with 4 corners");
     }
 
     // ==================== EDGE CASES ====================
