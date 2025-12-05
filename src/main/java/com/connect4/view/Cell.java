@@ -1,4 +1,4 @@
-package src.main.java.com.connect4.view;
+package com.connect4.view;
 
 /**
  * Cell.java - NEW CLASS
@@ -227,3 +227,4 @@ public class Cell {
         };
     }
 }
+

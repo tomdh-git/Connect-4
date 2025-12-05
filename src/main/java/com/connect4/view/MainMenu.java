@@ -1,13 +1,13 @@
-package src.main.java.com.connect4.view;
+package com.connect4.view;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import src.main.java.com.connect4.player.Player;
-import src.main.java.com.connect4.settings.DifficultyLevel;
-import src.main.java.com.connect4.settings.GameSettings;
-import src.main.java.com.connect4.settings.SaveLoadManager;
+import com.connect4.player.Player;
+import com.connect4.settings.DifficultyLevel;
+import com.connect4.settings.GameSettings;
+import com.connect4.settings.SaveLoadManager;
 
 public class MainMenu extends JFrame {
 
@@ -583,3 +583,4 @@ public class MainMenu extends JFrame {
         });
     }
 }
+

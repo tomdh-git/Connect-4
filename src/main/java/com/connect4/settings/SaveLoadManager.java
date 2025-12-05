@@ -1,13 +1,13 @@
-package src.main.java.com.connect4.settings;
+package com.connect4.settings;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Stack;
 
-import src.main.java.com.connect4.player.Player;
-import src.main.java.com.connect4.view.Cell;
-import src.main.java.com.connect4.view.GameState;
+import com.connect4.player.Player;
+import com.connect4.view.Cell;
+import com.connect4.view.GameState;
 
 import java.awt.Point;
 
@@ -330,3 +330,4 @@ public class SaveLoadManager {
         return file.delete();
     }
 }
+

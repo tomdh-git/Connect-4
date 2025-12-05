@@ -1,4 +1,4 @@
-package src.main.java.com.connect4.view;
+package com.connect4.view;
 
 /**
  * GameView.java - NEW INTERFACE
@@ -69,3 +69,4 @@ public interface GameView {
      */
     void cleanup();
 }
+

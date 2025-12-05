@@ -1,14 +1,14 @@
-package src.main.java.com.connect4;
+package com.connect4;
 
 import java.util.Scanner;
 
-import src.main.java.com.connect4.view.GUIView;
-import src.main.java.com.connect4.settings.DifficultyLevel;
-import src.main.java.com.connect4.settings.GameSettings;
-import src.main.java.com.connect4.view.GameState;
-import src.main.java.com.connect4.view.GameView;
-import src.main.java.com.connect4.view.TextView;
-import src.main.java.com.connect4.player.Player;
+import com.connect4.view.GUIView;
+import com.connect4.settings.DifficultyLevel;
+import com.connect4.settings.GameSettings;
+import com.connect4.view.GameState;
+import com.connect4.view.GameView;
+import com.connect4.view.TextView;
+import com.connect4.player.Player;
 
 /**
  * Connect4Game.java - MODIFIED CLASS
@@ -315,3 +315,4 @@ public class Connect4Game {
         };
     }
 }
+

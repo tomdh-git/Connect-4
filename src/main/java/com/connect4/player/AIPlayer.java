@@ -1,11 +1,11 @@
-package src.main.java.com.connect4.player;
+package com.connect4.player;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import src.main.java.com.connect4.view.Cell;
-import src.main.java.com.connect4.settings.DifficultyLevel;
-import src.main.java.com.connect4.view.GameState;
+import com.connect4.view.Cell;
+import com.connect4.settings.DifficultyLevel;
+import com.connect4.view.GameState;
 
 /**
  * AIPlayer.java
@@ -462,3 +462,4 @@ public class AIPlayer {
         return playerNumber;
     }
 }
+

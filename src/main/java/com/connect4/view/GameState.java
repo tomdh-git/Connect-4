@@ -1,10 +1,10 @@
-package src.main.java.com.connect4.view;
+package com.connect4.view;
 
 import java.awt.Point;
 import java.util.Stack;
 
-import src.main.java.com.connect4.settings.GameSettings;
-import src.main.java.com.connect4.player.Player;
+import com.connect4.settings.GameSettings;
+import com.connect4.player.Player;
 
 import java.util.Random;
 import java.util.ArrayList;
@@ -659,3 +659,4 @@ public class GameState {
         return res;
     }
 }
+

@@ -1,11 +1,11 @@
-package src.main.java.com.connect4.view;
+package com.connect4.view;
 
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import src.main.java.com.connect4.player.Player;
+import com.connect4.player.Player;
 
 /**
  * BoardDrawing.java - MODIFIED CLASS
@@ -269,3 +269,4 @@ public class BoardDrawing extends JComponent implements MouseListener {
     public void mouseExited(MouseEvent e) {
     }
 }
+

@@ -1,4 +1,4 @@
-package src.main.java.com.connect4.player;
+package com.connect4.player;
 
 import java.io.Serializable;
 
@@ -236,3 +236,4 @@ public class Player implements Serializable {
                 id, name, type, coinColor);
     }
 }
+

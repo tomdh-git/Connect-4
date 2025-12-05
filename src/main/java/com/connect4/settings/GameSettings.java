@@ -1,8 +1,8 @@
-package src.main.java.com.connect4.settings;
+package com.connect4.settings;
 
 import java.io.Serializable;
 
-import src.main.java.com.connect4.player.Player;
+import com.connect4.player.Player;
 
 /**
  * GameSettings.java - NEW CLASS
@@ -339,3 +339,4 @@ public class GameSettings implements Serializable {
         this.fourCornersEnabled = fourCornersEnabled;
     }
 }
+

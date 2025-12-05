@@ -1,9 +1,9 @@
-package src.test.java.com.connect4;
+package com.connect4;
 
-import src.main.java.com.connect4.player.Player;
-import src.main.java.com.connect4.settings.DifficultyLevel;
-import src.main.java.com.connect4.settings.GameSettings;
-import src.main.java.com.connect4.view.GameState;
+import com.connect4.player.Player;
+import com.connect4.settings.DifficultyLevel;
+import com.connect4.settings.GameSettings;
+import com.connect4.view.GameState;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -280,3 +280,4 @@ public class WinConditionTest {
         }
     }
 }
+

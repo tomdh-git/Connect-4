@@ -1,4 +1,4 @@
-package src.main.java.com.connect4.settings;
+package com.connect4.settings;
 
 import java.io.Serializable;
 
@@ -126,3 +126,4 @@ public enum DifficultyLevel implements Serializable {
         return descriptions;
     }
 }
+
