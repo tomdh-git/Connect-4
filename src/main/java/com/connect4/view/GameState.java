@@ -233,11 +233,8 @@ public class GameState {
             return false;
         }
 
-        // The lucky coin belongs to the player who just moved (triggered the offer).
-        // Since move() switched the turn, we need the *previous* player.
-        // If it's currently P1's turn, P2 was the last to move.
-        // If it's currently P2's turn, P1 was the last to move.
-        Player luckyPlayer = player1Turn ? settings.getPlayer2() : settings.getPlayer1();
+        // The lucky coin belongs to the CURRENT player (pre-move offer)
+        Player luckyPlayer = getCurrentPlayer();
 
         setColor(luckyOfferColumn, luckyOfferRow, luckyPlayer);
 
@@ -249,7 +246,8 @@ public class GameState {
         luckyOfferColumn = -1;
         luckyOfferRow = -1;
 
-        player1Turn = !player1Turn;
+        // player1Turn = !player1Turn; // Do not switch turn - lucky coin is a free
+        // action
         checkForWin();
 
         return true;
@@ -300,9 +298,8 @@ public class GameState {
     public Player getLuckyOfferPlayer() {
         if (!luckyOfferPending)
             return null;
-        // The lucky coin belongs to the player who just moved (triggered the offer).
-        // Since move() switched the turn, we need the *previous* player.
-        return player1Turn ? settings.getPlayer2() : settings.getPlayer1();
+        // The lucky coin is an opportunity for the CURRENT player before their move
+        return getCurrentPlayer();
     }
 
     public void moveInternal(int column) {
@@ -659,4 +656,3 @@ public class GameState {
         return res;
     }
 }
-

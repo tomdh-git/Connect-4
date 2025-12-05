@@ -558,18 +558,26 @@ public class GUIView implements GameView {
             return;
 
         if (state.isLuckyOfferPending()) {
-            boolean shouldAccept = aiPlayer.shouldAcceptLuckyOffer(state);
-            if (shouldAccept) {
-                state.acceptLuckyOffer();
+            Player luckyOwner = state.getLuckyOfferPlayer();
+
+            if (luckyOwner != null && luckyOwner.isComputer()) {
+                boolean shouldAccept = aiPlayer.shouldAcceptLuckyOffer(state);
+                if (shouldAccept) {
+                    state.acceptLuckyOffer();
+                } else {
+                    state.rejectLuckyOffer();
+                }
+                update();
             } else {
-                state.rejectLuckyOffer();
+                // Should not happen if logic is correct, but safe guard:
+                showLuckyOfferDialog();
+                return; // Stop AI processing if it's user's coin
             }
-            update();
 
             if (state.getGameOver()) {
                 showGameOverMessage();
+                return;
             }
-            return;
         }
 
         frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -589,17 +597,27 @@ public class GUIView implements GameView {
                         update();
 
                         if (state.isLuckyOfferPending()) {
-                            boolean shouldAccept = aiPlayer.shouldAcceptLuckyOffer(state);
-                            if (shouldAccept) {
-                                state.acceptLuckyOffer();
+                            // Check who owns the lucky coin
+                            Player luckyOwner = state.getLuckyOfferPlayer();
+
+                            if (luckyOwner != null && luckyOwner.isComputer()) {
+                                // AI's coin - handle it
+                                boolean shouldAccept = aiPlayer.shouldAcceptLuckyOffer(state);
+                                if (shouldAccept) {
+                                    state.acceptLuckyOffer();
+                                } else {
+                                    state.rejectLuckyOffer();
+                                }
+                                update();
                             } else {
-                                state.rejectLuckyOffer();
+                                // User's coin - SHOW DIALOG
+                                showLuckyOfferDialog();
                             }
-                            update();
                         }
 
                         if (state.getGameOver()) {
                             showGameOverMessage();
+                            return;
                         }
                     }
                 } catch (Exception e) {
@@ -702,4 +720,3 @@ public class GUIView implements GameView {
         }
     }
 }
-

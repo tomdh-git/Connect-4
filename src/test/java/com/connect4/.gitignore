@@ -1,8 +1,8 @@
+/FourCornersTest.class
 /GameStateTest.class
 /GridGenerationTest.class
 /LuckyCoinTest.class
-/PlayerModeTest.class
-/WinConditionTest.class
 /MessageValidationTest.class
+/PlayerModeTest.class
 /SaveLoadTest.class
-/FourCornersTest.class
+/WinConditionTest.class
